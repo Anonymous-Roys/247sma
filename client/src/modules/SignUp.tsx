@@ -4,6 +4,7 @@ import axios from 'axios';
 import { FaEnvelope, FaPhone, FaLock, FaKey } from 'react-icons/fa';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { Navigate } from 'react-router-dom';
 
 const SignUp = () => {
   const [step, setStep] = useState<1 | 2>(1);
@@ -11,20 +12,20 @@ const SignUp = () => {
   const [password, setPassword] = useState('');
   const [otp, setOtp] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-
+  
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
 
     try {
       if (step === 1) {
-        await axios.post('http://localhost:10000/api/send-otp', { emailOrPhone });
+        await axios.post('https://two47sma.onrender.com/api/send-otp', { emailOrPhone });
         setStep(2);
         toast.success('OTP sent successfully!');
       } else {
-        await axios.post('http://localhost:10000/api/verify-otp', { emailOrPhone, password, otp });
+        await axios.post('https://two47sma.onrender.com/api/verify-otp', { emailOrPhone, password, otp });
         toast.success('Account created successfully!');
-        // Redirect to login or dashboard
+        // Navigate('/login');
       }
     } catch (error: any) {
       toast.error(error.response?.data?.message || 'An error occurred');
