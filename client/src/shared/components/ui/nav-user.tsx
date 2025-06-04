@@ -48,7 +48,7 @@ const navigate = useNavigate();
       const token = sessionStorage.getItem("token");
 
       if (token) {
-        await fetch("https://two47sma.onrender.com/api/logout", {
+        await fetch("http://localhost:10000/api/logout", {
           method: "POST",
           headers: {
             Authorization: `Bearer ${token}`,

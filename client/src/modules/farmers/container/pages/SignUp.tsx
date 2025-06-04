@@ -69,7 +69,7 @@ const SignUp = () => {
 
     setIsLoading(true);
     try {
-      await axios.post('https://two47sma.onrender.com/api/send-otp', { 
+      await axios.post('http://localhost:10000/api/send-otp', { 
         emailOrPhone: formData.emailOrPhone 
       });
       setStep(2);
@@ -90,7 +90,7 @@ const SignUp = () => {
 
     setIsLoading(true);
     try {
-      await axios.post('https://two47sma.onrender.com/api/verify-otp', { 
+      await axios.post('http://localhost:10000/api/verify-otp', { 
         emailOrPhone: formData.emailOrPhone,
         password: formData.password,
         name: formData.name,

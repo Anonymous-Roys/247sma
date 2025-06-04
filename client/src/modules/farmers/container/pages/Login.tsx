@@ -17,7 +17,7 @@ const Login = () => {
     setIsLoading(true);
 
     try {
-      const response = await axios.post('https://two47sma.onrender.com/api/login', { email, password });
+      const response = await axios.post('http://localhost:10000/api/login', { email, password });
       const token = response.data.token;
       toast.success('Login successful!');
 

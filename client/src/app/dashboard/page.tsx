@@ -34,7 +34,7 @@ export default function Page() {
         }
   
         try {
-          const res = await fetch("https://two47sma.onrender.com/api/me", {
+          const res = await fetch("http://localhost:10000/api/me", {
             headers: { Authorization: `Bearer ${token}` },
           });
   

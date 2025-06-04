@@ -22,6 +22,7 @@ import SignUp from "@/modules/farmers/container/pages/SignUp";
 import Login from "@/modules/farmers/container/pages/Login";
 import ProtectedRoute from "@/modules/farmers/components/auth/ProtectedRoute";
 import NotFound from "@/modules/farmers/container/pages/NotFound";
+import EditProductPage from "@/modules/farmers/container/pages/EditProductPage";
 
 function Router() {
   const router = createBrowserRouter([
@@ -50,7 +51,14 @@ function Router() {
         { path: "", element: <Navigate to="overview" replace /> },
         { path: "overview", element: <Overview /> },
         { path: "profile", element: <Profile /> },
-        { path: "products", element: <Products /> },
+        { 
+          path: "products", 
+          element: "",
+          children:[
+            { index: true, element: <Products /> },
+            { path:"edit/:id", element:<EditProductPage />},
+          ] 
+        },
         { path: "orders", element: <Orders /> },
         { path: "farms", element: <Farms /> },
         { path: "investments", element: <Investments /> },
