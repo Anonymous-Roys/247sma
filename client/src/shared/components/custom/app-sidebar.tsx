@@ -77,7 +77,7 @@ type AppSidebarProps = React.ComponentProps<typeof Sidebar> & {
   user: {
     name: string
     email: string
-    avatar: string ,
+    avatar: string | '' ,
     initials: string
   } | null
 }

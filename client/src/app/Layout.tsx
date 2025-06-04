@@ -4,13 +4,20 @@ import { AppSidebar } from "@/shared/components/custom/app-sidebar";
 import { SidebarProvider, SidebarTrigger } from "@/shared/components/ui/sidebar";
 import { Outlet } from "react-router-dom";
 
+
+export type User = {
+  name: string;
+  email: string;
+  avatar: string;
+  initials: string;
+};
 export default function FarmersLayout() {
-  const [user, setUser] = useState(null);
-function getInitials(name: string): string {
-  if (!name) return "U";
-  const parts = name.trim().split(" ");
-  return parts.map(part => part[0]?.toUpperCase()).slice(0, 2).join("");
-}
+  const [user, setUser] = useState<User | null>(null);
+  function getInitials(name: string): string {
+    if (!name) return "U";
+    const parts = name.trim().split(" ");
+    return parts.map(part => part[0]?.toUpperCase()).slice(0, 2).join("");
+  }
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -30,12 +37,16 @@ function getInitials(name: string): string {
 
         const data = await res.json();
         // console.log(data)
-        setUser({
-          name: data.user.fullname,
-          email: data.user.email,
-          avatar: data.user.avatar || null,
-    initials: getInitials(data.user.fullname),
-        });
+        if (data?.user) {
+         setUser({
+  name: data.user.fullname,
+  email: data.user.email,
+  avatar: data.user.avatar || "", // fallback to empty string or a default image URL
+  initials: getInitials(data.user.fullname),
+});
+
+        }
+
         console.log(data.user.fullname)
       } catch (err) {
         console.error("Error fetching user:", err);

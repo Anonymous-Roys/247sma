@@ -1,9 +1,7 @@
 import { useState } from 'react';
 import { Mail, Lock, Eye, EyeOff } from 'lucide-react';
-import { motion } from 'framer-motion';
 import axios from 'axios';
-import { FaEnvelope, FaLock } from 'react-icons/fa';
-import { toast, ToastContainer } from 'react-toastify';
+import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { useNavigate } from 'react-router-dom';
 

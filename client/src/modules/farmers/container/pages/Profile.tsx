@@ -76,7 +76,7 @@ const [firstName = '', lastName = ''] = (data.user.fullname || '').trim().split(
 
       if (!res.ok) throw new Error('Failed to update profile');
 
-      const updated = await res.json();
+      
       setProfileData(tempData);
       setIsEditing(false);
     } catch (error) {

@@ -1,5 +1,5 @@
-import { useState } from 'react';
-import { Bell, MoreVertical, Search } from 'lucide-react';
+
+import { Bell,  Search } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 type HeaderProps = {
@@ -14,15 +14,8 @@ type HeaderProps = {
 
 const Header = ({ user }: HeaderProps) => {
 
-  const [dropdownOpen, setDropdownOpen] = useState(false);
-
-  const toggleDropdown = () => {
-    setDropdownOpen((prev) => !prev);
-  };
-
-  const closeDropdown = () => {
-    setDropdownOpen(false);
-  };
+  
+ 
 
   return (
     <div className="sticky top-0 z-10 p-3 right-2 left-2  bg-gradient-to-t from-[#dcdcdc0a] to-[#DCDCDC]">
