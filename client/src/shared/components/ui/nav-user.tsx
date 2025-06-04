@@ -28,6 +28,7 @@ import {
   SidebarMenuItem,
   useSidebar,
 } from "@/shared/components/ui/sidebar"
+import { useNavigate } from "react-router-dom"
 
 export function NavUser({
   user,
@@ -36,10 +37,34 @@ export function NavUser({
     name: string
     email: string
     avatar: string
+    initials: string
   }
 }) {
   const { isMobile } = useSidebar()
+const navigate = useNavigate();
 
+  const handleLogout = async () => {
+    try {
+      const token = sessionStorage.getItem("token");
+
+      if (token) {
+        await fetch("https://two47sma.onrender.com/api/logout", {
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+      }
+
+      sessionStorage.removeItem("token"); // Clear token
+      navigate("/login"); // Redirect to login
+    } catch (error) {
+      console.error("Logout failed:", error);
+      // Still clear and redirect even if server errors
+      sessionStorage.removeItem("token");
+      navigate("/login");
+    }
+  };
   return (
     <SidebarMenu>
       <SidebarMenuItem>
@@ -51,7 +76,9 @@ export function NavUser({
             >
               <Avatar className="w-8 h-8 rounded-lg">
                 <AvatarImage src={user.avatar} alt={user.name} />
-                <AvatarFallback className="rounded-lg">EA</AvatarFallback>
+                <AvatarFallback className="rounded-lg">
+    {user?.initials || "U"}
+  </AvatarFallback>
               </Avatar>
               <div className="grid flex-1 text-sm leading-tight text-left">
                 <span className="font-semibold truncate">{user.name}</span>
@@ -101,7 +128,7 @@ export function NavUser({
               </DropdownMenuItem>
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
-            <DropdownMenuItem>
+            <DropdownMenuItem onClick={handleLogout}>
               <LogOut />
               Log out
             </DropdownMenuItem>
@@ -111,3 +138,4 @@ export function NavUser({
     </SidebarMenu>
   )
 }
+

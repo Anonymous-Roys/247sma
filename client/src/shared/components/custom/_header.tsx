@@ -1,9 +1,19 @@
 import { useState } from 'react';
 import { Bell, MoreVertical, Search } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
-import ProfilePic from '@/shared/assets/farmers_assets/farmerEnyonam.png';
+type HeaderProps = {
+  user: {
+    name: string;
+    email: string;
+    avatar: string | null;
+    initials: string;
+    role?: string; // Optional, if available
+  } | null;
+};
 
-const Header = () => {
+const Header = ({ user }: HeaderProps) => {
+
   const [dropdownOpen, setDropdownOpen] = useState(false);
 
   const toggleDropdown = () => {
@@ -25,7 +35,7 @@ const Header = () => {
             className="w-3/4 py-3 pl-10 pr-2 bg-[#dcdcdc07] border-none rounded-lg focus:outline-none placeholder:text-sm"
           />
         </div>
-        
+        <Link to="/farmers/notifications">
         <div className="relative">
           <button className="p-2 rounded-full hover:bg-gray-100">
             <Bell className="w-6 h-6 text-center text-gray-700 " />
@@ -35,29 +45,41 @@ const Header = () => {
             3
           </span>
         </div>
+        </Link>    
 
         {/* Right section: User profile */}
         <div className="flex items-center space-x-3">
-          <img
-            src={ProfilePic} // Placeholder image URL
-            alt="Profile"
-            className="w-10 h-full border border-gray-300 rounded-full"
-          />
-          <div className="flex-col hidden text-left md:flex"> {/* Hide on mobile */}
-            <span className="text-sm font-medium">John Doe</span>
-            <span className="text-xs text-gray-500">Admin</span>
-          </div>
+         {user?.avatar ? (
+  <img
+    src={user.avatar}
+    alt={user.name}
+    className="object-cover w-10 h-10 bg-gray-200 border border-gray-300 rounded-full"
+  />
+) : (
+  <div className="flex items-center justify-center w-10 h-10 text-sm font-semibold text-white bg-gray-300 rounded-full">
+    {user?.initials || "U"}
+  </div>
+)}
+
+<div className="flex-col hidden text-left md:flex">
+  <span className="text-sm font-medium">
+    {user?.name || "User"}
+  </span>
+  <span className="text-xs text-gray-500">
+    {user?.role || "Farmer"}
+  </span>
+</div>
+
         </div>
 
         {/* More options icon */}
-        <div className="relative">
+        {/* <div className="relative">
           <button
             onClick={toggleDropdown}
             className="p-2 rounded-full hover:bg-gray-100"
           >
             <MoreVertical className="w-6 p-0 text-gray-700 md:w-6" />
           </button>
-          {/* Dropdown Menu */}
           {dropdownOpen && (
             <div className="absolute right-0 z-10 w-48 mt-2 bg-white border rounded-md shadow-lg">
               <div className="py-1">
@@ -82,7 +104,7 @@ const Header = () => {
               </div>
             </div>
           )}
-        </div>
+        </div> */}
       </header>
     </div>
   );

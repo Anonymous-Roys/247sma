@@ -144,9 +144,9 @@ export default function FarmMarketplace() {
   };
 
   return (
-    <div className="flex flex-col min-h-screen md:flex-row bg-gray-50">
+    <div className="flex flex-col min-h-screen md:flex-row">
       {/* Sidebar */}
-      <div className="w-full p-4 bg-white shadow-md md:w-64">
+      <div className="w-full p-4 mt-2 ml-4 bg-white shadow-md md:w-64">
         <SidebarComponent
           selectedCategory={selectedCategory}
           handleCategoryChange={handleCategoryChange}
@@ -156,7 +156,7 @@ export default function FarmMarketplace() {
       </div>
 
       {/* Main Content */}
-      <div className="flex-1 p-4">
+      <div className="flex-1 p-2">
         {/* Statistics */}
         <StatsComponent />
 

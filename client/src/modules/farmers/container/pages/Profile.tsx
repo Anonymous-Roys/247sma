@@ -1,75 +1,124 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Edit2, Camera } from 'lucide-react';
 import ProfileSummary from '../../components/profile/ProfileSummary';
 
+
+
 export default function Profile() {
   const [isEditing, setIsEditing] = useState(false);
-  const [profileData, setProfileData] = useState({
-    firstName: "Luis",
-    lastName: "Andrew",
-    email: "luisandrew@gmail.com",
-    phone: "62 2341 1231 123",
-    phoneIntl: "+233 20 235 5841",
-    country: "United States",
-    postalCode: "123124",
-    farmSize: "48 Acres",
-    location: "Brahabebome",
-    cropTypes: "luisandrew@gmail.com", // This seems to be an error in the original UI
-    smartEquipment: "Camera, 4 humidity sensors, 2moisture sensors,...",
-    idNumber: "342712310",
-    totalInvest: "$ 383,400",
-    totalProfit: "$ 3834,12",
-    netIncome: "~10%"
-  });
+  const [profileData, setProfileData] = useState<any>(null); // Initially null
+  const [tempData, setTempData] = useState<any>(null);
 
-  const [tempData, setTempData] = useState({...profileData});
+  // Fetch profile data on mount
+  useEffect(() => {
+    const fetchProfile = async () => {
+      const token = sessionStorage.getItem('token');
+      if (!token) return;
 
-  const handleInputChange = (e:any) => {
+      try {
+        const res = await fetch('https://two47sma.onrender.com/api/me', {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+
+        if (!res.ok) throw new Error('Failed to fetch profile');
+        const data = await res.json();
+const [firstName = '', lastName = ''] = (data.user.fullname || '').trim().split(' ');
+
+        const user = {
+          firstName,
+          lastName,
+          email: data.user.email || '',
+          phone: data.user.phone || '',
+          phoneIntl: data.user.phoneIntl || '',
+          country: data.user.country || '',
+          postalCode: data.user.postalCode || '',
+          farmSize: data.user.farmSize || '',
+          location: data.user.location || '',
+          cropTypes: data.user.cropTypes || '',
+          smartEquipment: data.user.smartEquipment || '',
+          idNumber: data.user.idNumber || '',
+          totalInvest: data.user.totalInvest || '',
+          totalProfit: data.user.totalProfit || '',
+          netIncome: data.user.netIncome || ''
+        };
+
+        setProfileData(user);
+        setTempData(user);
+      } catch (error) {
+        console.error('Error fetching profile:', error);
+      }
+    };
+
+    fetchProfile();
+  }, []);
+
+  const handleInputChange = (e: any) => {
     const { name, value } = e.target;
-    setTempData({
-      ...tempData,
-      [name]: value
-    });
+    setTempData((prev: any) => ({
+      ...prev,
+      [name]: value,
+    }));
   };
 
-  const handleSave = () => {
-    setProfileData({...tempData});
-    setIsEditing(false);
+  const handleSave = async () => {
+    const token = sessionStorage.getItem('token');
+    try {
+      const res = await fetch('https://two47sma.onrender.com/api/update-profile', {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify(tempData),
+      });
+
+      if (!res.ok) throw new Error('Failed to update profile');
+
+      const updated = await res.json();
+      setProfileData(tempData);
+      setIsEditing(false);
+    } catch (error) {
+      console.error('Failed to save profile:', error);
+    }
   };
 
   const handleCancel = () => {
-    setTempData({...profileData});
+    setTempData(profileData);
     setIsEditing(false);
   };
 
-  const handleEdit = () => {
-    setIsEditing(true);
-  };
+  const handleEdit = () => setIsEditing(true);
+
+  if (!profileData) return <div className="p-6">Loading...</div>;
 
   return (
-    <div className="flex flex-col min-h-screen bg-gray-100">
-      {/* Header Banner */}
+    
+    <div className="flex flex-col min-h-screen p-4 ">
       <div className="relative p-6 text-white bg-green-800">
-        <h1 className="text-2xl font-bold">Green Fields Agro Farm</h1>
+        <h1 className="text-2xl font-bold">
+          {profileData.firstName}'s Agro Profile
+        </h1>
       </div>
 
-      {/* Main Content */}
-      <div className="flex flex-col flex-grow gap-4 p-4 md:flex-row">
-        
-       <ProfileSummary/>
-        {/* Main Profile Content */}
+      <div className="flex flex-col flex-grow gap-4 mt-4 md:flex-row">
+        <ProfileSummary />
+
         <div className="w-full p-6 bg-white rounded-lg shadow-sm md:w-3/4">
           <div className="flex items-center gap-4 mb-8">
             <div className="flex items-center justify-center w-16 h-16 bg-gray-200 rounded-full">
               <Camera size={24} className="text-gray-500" />
             </div>
             <div>
-              <h2 className="text-xl font-semibold">{profileData.firstName} {profileData.lastName}</h2>
+              <h2 className="text-xl font-semibold">
+                {profileData.firstName} {profileData.lastName}
+              </h2>
               <p className="text-gray-500">{profileData.phoneIntl}</p>
             </div>
           </div>
-          
-          <div className="pb-2 mb-6 border-b border-gray-200">
+
+         <div className="pb-2 mb-6 border-b border-gray-200">
             <h3 className="text-sm font-medium text-green-600 uppercase">Personal Information</h3>
           </div>
           
@@ -230,17 +279,16 @@ export default function Profile() {
               )}
             </div>
           </div>
-          
           <div className="flex justify-end mt-8">
             {isEditing ? (
               <div className="flex gap-4">
-                <button 
+                <button
                   onClick={handleCancel}
                   className="px-6 py-2 text-gray-700 border border-gray-300 rounded-md hover:bg-gray-100"
                 >
                   Cancel
                 </button>
-                <button 
+                <button
                   onClick={handleSave}
                   className="px-6 py-2 text-white bg-green-600 rounded-md hover:bg-green-700"
                 >
@@ -248,7 +296,7 @@ export default function Profile() {
                 </button>
               </div>
             ) : (
-              <button 
+              <button
                 onClick={handleEdit}
                 className="flex items-center gap-2 px-6 py-2 text-white bg-green-600 rounded-md hover:bg-green-700"
               >

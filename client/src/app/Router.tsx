@@ -18,7 +18,10 @@ import AMAnalytics from "@/modules/farmers/container/pages/farmForMe/AMAnalytics
 import ClimateDashboard from "@/modules/farmers/container/pages/farmForMe/Climate";
 import FarmMarketplace from "@/modules/farmers/container/pages/FarmMarketplace";
 
-import SignUp from "@/modules/SignUp";
+import SignUp from "@/modules/farmers/container/pages/SignUp";
+import Login from "@/modules/farmers/container/pages/Login";
+import ProtectedRoute from "@/modules/farmers/components/auth/ProtectedRoute";
+import NotFound from "@/modules/farmers/container/pages/NotFound";
 
 function Router() {
   const router = createBrowserRouter([
@@ -28,118 +31,47 @@ function Router() {
     },
     {
       path: "/login",
-      element: <SignUp/>, // Default route redirects to /farmers
+      element: <Login />,
+    },
+    {
+      path: "/signup",
+      element: <SignUp />,
     },
     {
       path: "farmers",
       element: (
-        <ErrorBoundary >
-          <FarmersLayout />
-        </ErrorBoundary>
+        <ProtectedRoute>
+          <ErrorBoundary >
+            <FarmersLayout />
+          </ErrorBoundary>
+        </ProtectedRoute>
       ),
       children: [
-        {
-          path: "", // This path corresponds to /farmers
-          element: <Navigate to="overview" replace />,
-        },
-        {
-          path: "overview",
-          element: <Overview />,
-        },
-        {
-          path: "profile",
-          element: <Profile />,
-        },
-        {
-          path: "products",
-          element: <Products />,
-        },
-        {
-          path: "orders",
-          element: <Orders />,
-        },
-        {
-          path: "farms",
-          element: <Farms />,
-        },
-        {
-          path: "investments",
-          element: <Investments />,
-        },
-        {
-          path: "campaign-detail",
-          element: <CampaignDetail />,
-        },
-        {
-          path: "notification",
-          element: <FarmNotifications />,
-        },
-        {
-          path: "marketplace",
-          element: <FarmMarketplace />,
-        },
-        {
-          path: "marketplace/product/:slug",
-          element: <ProductDetailPage />,
-        },
-        {
-          path: "crop-analytics",
-          element: <CropAnalytics />,
-        },
-        {
-          path: "soil-analytics",
-          element: <SoilAnalytics />,
-        },
-        {
-          path: "scarecrow",
-          element: <ScarecrowDashboard />,
-        },
-        {
-          path: "am-analytics",
-          element: <AMAnalytics />,
-        },
-        {
-          path: "climate",
-          element: <ClimateDashboard />,
-        },
-        {
-          path: "*",
-          element: <FarmNotifications />,
-        },
-
+        { path: "", element: <Navigate to="overview" replace /> },
+        { path: "overview", element: <Overview /> },
+        { path: "profile", element: <Profile /> },
+        { path: "products", element: <Products /> },
+        { path: "orders", element: <Orders /> },
+        { path: "farms", element: <Farms /> },
+        { path: "investments", element: <Investments /> },
+        { path: "campaign-detail", element: <CampaignDetail /> },
+        { path: "notification", element: <FarmNotifications /> },
+        { path: "marketplace", element: <FarmMarketplace /> },
+        { path: "marketplace/product/:slug", element: <ProductDetailPage /> },
+        { path: "crop-analytics", element: <CropAnalytics /> },
+        { path: "soil-analytics", element: <SoilAnalytics /> },
+        { path: "scarecrow", element: <ScarecrowDashboard /> },
+        { path: "am-analytics", element: <AMAnalytics /> },
+        { path: "climate", element: <ClimateDashboard /> },
+        {path: "*",element: <Navigate to="/farmers" replace />,}
       ],
-    },
-    // {
-    //   path: "buyers",
-    //   element: (
-    //     <ErrorBoundary>
-    //       <FarmersLayout />
-    //     </ErrorBoundary>
-    //   ),
-    //   children: [
-    //     {
-    //       path: "",
-    //       element: <Navigate to="overview" replace />, // Redirect to overview when /investment is accessed
-    //     },
-    //     {
-    //       path: "overview",
-    //       element: <Overview />,
-    //     },
-    //     {
-    //       path: "profile",
-    //       element: <Profile />,
-    //     },
-    //     {
-    //       path: "products",
-    //       element: <Products />,
-    //     },
-    //     {
-    //       path: "orders",
-    //       element: <Orders />,
-    //     },
 
-    //   ],
-    // },
+    },
+     {
+      path: "*",
+      element: <NotFound />,
+    },
+
   ]);
 
   return (

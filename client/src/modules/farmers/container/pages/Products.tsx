@@ -210,9 +210,9 @@ export default function Products() {
   };
 
   return (
-    <div className="flex flex-col min-h-screen p-4 bg-white">
+    <div className="flex flex-col min-h-screen p-6 m-4 bg-white rounded-lg">
       {/* Search and Add Product Bar */}
-      <div className="flex items-center justify-between mb-6">
+      <div className="flex items-center justify-between p-2 mb-2">
         <div className="relative flex-1 max-w-md">
           <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
             <Search className="w-5 h-5 text-gray-400" />
@@ -354,7 +354,7 @@ export default function Products() {
       )}
 
       {/* Product Table */}
-      <div className="overflow-x-auto">
+      <div className="p-2 overflow-x-auto">
         <table className="min-w-full divide-y divide-gray-200">
           <thead className="bg-white">
             <tr>

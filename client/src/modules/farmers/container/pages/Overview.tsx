@@ -1,120 +1,3 @@
-// import React, { useEffect, useState } from 'react'
-// import CountUp from 'react-countup'
-// import { SalesChart } from '../../components/AreaCharts';
-// import { ArrowUpIcon, ArrowDownIcon } from 'lucide-react';
-// import Reviews from '../../components/overview/Reviews';
-// import Transactions from '../../components/overview/Transactions';
-// import { Scrollbars } from 'react-custom-scrollbars-2';
-
-// const Overview = () => {
-//   return (
-    
-//          <Scrollbars>
-          
-//             <div className="min-h-screen p-3">
-//       <div className="container mx-auto space-y-4">
-       
-//         <StatsCards />
-//         <div className="grid grid-cols-1 gap-2 lg:grid-cols-3 ">
-//           <SalesReport />
-//           <Reviews />
-//           <Transactions/>
-       
-//         </div>
-//       </div>
-//     </div>
-//          </Scrollbars>
-       
-//   )
-// }
-
-// interface Stat {
-//   label: string;
-//   value: number;
-//   prefix?: string;
-//   duration: number;
-//   change: number; // Positive for increase, negative for decrease
-// }
-
-// export const StatsCards: React.FC = () => {
-//   const [refresh, setRefresh] = useState(false);
-
-//   const stats: Stat[] = [
-//     { label: 'Total Products', value: 11, duration: 2, change: 1 }, // 1% increase
-//     { label: 'Total Sales', value: 238485, prefix: 'GHC', duration: 2.5, change: -4 }, // 4% decrease
-//     { label: 'Total Orders', value: 84382, duration: 2, change: 36 }, // 36% increase
-//     { label: 'credits From SMA', value: 82, duration: 2, change: 1, prefix:'XP' }, // 36% increase
-//   ];
-// useEffect(()=>{
-//   setRefresh(false)
-// },[refresh])
-//   // Function to trigger refresh animation
-//   // const handleRefresh = () => {
-//   //   setRefresh(true);
-//   //   setTimeout(() => setRefresh(false), 500);
-//   // };
-
-//   return (
-//     <div className="relative">
-//       {/* Refresh Button */}
-//       {/* <button
-//         onClick={handleRefresh}
-//         className="absolute px-4 py-2 text-white transition bg-blue-600 rounded-lg top-4 right-4 hover:bg-blue-700"
-//       >
-//         Refresh
-//       </button> */}
-
-     
-//       <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4 ">
-//         {stats.map((stat, index) => (
-//           <div
-//             key={index}
-//             className={`p-4 ${stat.prefix=="XP"?'bg-gradient-to-br from-[#A7FFA7] to-[#006600]':'bg-white'} shadow-md rounded-lg transition-transform duration-300 ${
-//               refresh ? 'animate-pulse' : ''
-//             }`}
-//           >
-//             <h3 className="mb-2 text-gray-500">{stat.label}</h3>
-//             <div className='flex justify-between'>
-//             <p className="flex items-center justify-center text-2xl font-bold">
-//               {stat.prefix}&nbsp;
-//               <CountUp start={0} end={stat.value} duration={stat.duration} separator="," />
-//             </p>
-//             {/* Change Indicator */}
-//             <div className="flex items-center justify-center mt-1 text-sm">
-//               {stat.change > 0 ? (
-//                 <span className="flex items-center text-green-600">
-//                   <ArrowUpIcon className="w-4 h-4 mr-1" />
-//                   {stat.change}%
-//                 </span>
-//               ) : (
-//                 <span className="flex items-center text-red-600">
-//                   <ArrowDownIcon className="w-4 h-4 mr-1" />
-//                   {Math.abs(stat.change)}%
-//                 </span>
-//               )}
-//             </div>
-//             </div>
-//           </div>
-//         ))}
-//       </div>
-//     </div>
-//   );
-// };
-
-
-// const SalesReport: React.FC = () => {
-//   return (
-//     <div className="h-[300px] col-span-1 lg:col-span-2 ">
-//         <SalesChart/>  
-//     </div>
-//   );
-// };
-
-
-
-// export default Overview
-
-
 import React, { useState } from 'react';
 import { ArrowUpRight, MoreVertical } from 'lucide-react';
 import {
@@ -131,7 +14,6 @@ import {
   Pie,
   Cell
 } from 'recharts';
-
 const FarmDashboard: React.FC = () => {
   const [timeRange, setTimeRange] = useState<'Daily' | 'Weekly' | 'Monthly'>('Daily');
   const [cropDemandTimeRange, setcropDemandTimeRange] = useState<'Day' | 'Week' | 'Month'>('Day');
@@ -229,7 +111,8 @@ const FarmDashboard: React.FC = () => {
   ];
 
   return (
-    <div className="p-4 mx-auto max-w-7xl bg-gray-50">
+    <div className="p-4 mx-auto max-w-7xl">
+    
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
         {/* Investment Balance and Chart Section */}
         <div className="p-6 bg-white rounded-lg shadow-sm h-fit">

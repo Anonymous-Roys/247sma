@@ -10,4 +10,9 @@ export default [
   pluginJs.configs.recommended,
   ...tseslint.configs.recommended,
   pluginReact.configs.flat.recommended,
+  {rules: {
+      // Disable this rule if using React 17+ with the new JSX transform
+      "react/react-in-jsx-scope": "off",
+    },
+  }
 ];
