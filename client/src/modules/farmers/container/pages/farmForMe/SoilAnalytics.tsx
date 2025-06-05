@@ -1,5 +1,6 @@
 import { useState } from 'react';
-import { MapPin, Search, Thermometer, Maximize, ChevronDown, Calendar } from 'lucide-react';
+import {  ChevronDown, Calendar } from 'lucide-react';
+import FarmMap from '@/modules/farmers/components/soilAnalytics/Map';
 
 // Farm data
 const farmData = {
@@ -53,82 +54,41 @@ export default function SoilAnalytics() {
         <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
           {/* Left column */}
           <div>
+            
+          
+          <div>
             {/* Farm Map */}
-            <div className="relative p-4 mb-6 bg-green-100 rounded-lg">
-              <div className="flex justify-between mb-4">
-                <div className="relative w-64">
-                  <Search className="absolute left-3 top-2.5 text-gray-400 h-5 w-5" />
-                  <input 
-                    type="text" 
-                    placeholder="Search..." 
-                    className="w-full py-2 pl-10 pr-4 border border-gray-300 rounded-md focus:outline-none"
-                  />
-                </div>
-                <div className="flex gap-2">
-                  <div className="flex items-center px-3 py-2 text-white bg-green-500 rounded-md">
-                    <Thermometer className="w-5 h-5 mr-1" />
-                    <span>{farmData.temperature}</span>
-                  </div>
-                  <button className="p-2 bg-white border border-gray-300 rounded-md">
-                    <Maximize className="w-5 h-5 text-gray-600" />
-                  </button>
-                </div>
-              </div>
+            <FarmMap farmData={farmData}/>
+          </div>
+           {/* Farm Practices */}
+            <div className="p-6 bg-white rounded-lg shadow">
+              <h2 className="mb-2 text-xl font-bold">Farm Practices for Best Production</h2>
+              <p className="mb-4 text-sm text-gray-600">These recommendations below are based on the farm data</p>
               
-              {/* Map */}
-              <div className="relative h-64">
-                {farmData.farms.map((farm) => (
-                  <div 
-                    key={farm.id}
-                    className={`absolute ${farm.color} rounded-md border border-gray-400 flex flex-col justify-center items-center`}
-                    style={{
-                      left: farm.x,
-                      top: farm.y,
-                      width: farm.width,
-                      height: farm.height
-                    }}
-                  >
-                    <div className="text-xs font-bold">{farm.name.split(' ')[0]}</div>
-                    {farm.name.includes('Farm') && <div className="text-xs">Farm</div>}
+              <div className="space-y-6">
+                {farmData.recommendations.map((recommendation, index) => (
+                  <div key={index} className="pt-4 border-t">
+                    <div className="flex gap-4">
+                      <div className="flex items-center justify-center w-10 h-10 p-2 bg-green-100 rounded-md">
+                        <div className="text-green-600">
+                          <svg xmlns="http://www.w3.org/2000/svg" className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+                          </svg>
+                        </div>
+                      </div>
+                      <div className="flex-1">
+                        <h3 className="mb-2 font-medium text-green-600">{recommendation.title}</h3>
+                        <p className="mb-2 text-sm text-gray-600">{recommendation.content}</p>
+                        <div className="text-xs text-gray-500">
+                          <span className="font-medium">Category:</span> {recommendation.category}
+                        </div>
+                      </div>
+                    </div>
                   </div>
                 ))}
               </div>
-              
-              {/* Map Controls */}
-              <div className="absolute flex flex-col gap-2 bottom-4 left-4">
-                <button className="flex items-center justify-center w-8 h-8 bg-white rounded-md shadow">
-                  <MapPin className="w-5 h-5 text-gray-700" />
-                </button>
-                <button className="flex items-center justify-center w-8 h-8 bg-white rounded-md shadow">
-                  +
-                </button>
-                <button className="flex items-center justify-center w-8 h-8 bg-white rounded-md shadow">
-                  -
-                </button>
-              </div>
-            </div>
-            
-            {/* Crop Recommendations */}
-            <div className="mb-6 bg-white rounded-lg shadow">
-              <div className="px-6 py-4 border-b border-gray-200">
-                <h2 className="text-xl font-bold">Crop Recommendations</h2>
-              </div>
-              <div className="p-4">
-                <div className="flex gap-4 pb-2 overflow-x-auto flex-nowrap">
-                  {farmData.crops.map((crop, index) => (
-                    <div key={index} className="min-w-[190px] relative rounded-lg overflow-hidden">
-                      <img src={crop.image} alt={crop.name} className="object-cover w-full h-32" />
-                      <div className="absolute bottom-0 left-0 right-0 p-3 text-white bg-gradient-to-t from-black/70 to-transparent">
-                        <div className="text-sm">{crop.name}</div>
-                        <div className="text-lg font-bold">{crop.growth}% Growth</div>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
             </div>
           </div>
-          
           {/* Right column */}
           <div>
             {/* Soil Moisture */}
@@ -302,34 +262,7 @@ export default function SoilAnalytics() {
               </div>
             </div>
             
-            {/* Farm Practices */}
-            <div className="p-6 bg-white rounded-lg shadow">
-              <h2 className="mb-2 text-xl font-bold">Farm Practices for Best Production</h2>
-              <p className="mb-4 text-sm text-gray-600">These recommendations below are based on the farm data</p>
-              
-              <div className="space-y-6">
-                {farmData.recommendations.map((recommendation, index) => (
-                  <div key={index} className="pt-4 border-t">
-                    <div className="flex gap-4">
-                      <div className="flex items-center justify-center w-10 h-10 p-2 bg-green-100 rounded-md">
-                        <div className="text-green-600">
-                          <svg xmlns="http://www.w3.org/2000/svg" className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
-                          </svg>
-                        </div>
-                      </div>
-                      <div className="flex-1">
-                        <h3 className="mb-2 font-medium text-green-600">{recommendation.title}</h3>
-                        <p className="mb-2 text-sm text-gray-600">{recommendation.content}</p>
-                        <div className="text-xs text-gray-500">
-                          <span className="font-medium">Category:</span> {recommendation.category}
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
+           
           </div>
         </div>
       </div>

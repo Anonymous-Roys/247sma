@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Edit2, Camera } from 'lucide-react';
 import ProfileSummary from '../../components/profile/ProfileSummary';
+import { BASE_URL } from '@/shared/lib/utils';
 
 
 
@@ -16,7 +17,7 @@ export default function Profile() {
       if (!token) return;
 
       try {
-        const res = await fetch('https://two47sma.onrender.com/api/me', {
+        const res = await fetch(`${BASE_URL}/api/me`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -65,7 +66,7 @@ const [firstName = '', lastName = ''] = (data.user.fullname || '').trim().split(
   const handleSave = async () => {
     const token = sessionStorage.getItem('token');
     try {
-      const res = await fetch('https://two47sma.onrender.com/api/update-profile', {
+      const res = await fetch(`${BASE_URL}/api/update-profile`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -271,7 +272,7 @@ const [firstName = '', lastName = ''] = (data.user.fullname || '').trim().split(
                   name="smartEquipment" 
                   value={tempData.smartEquipment} 
                   onChange={handleInputChange}
-                  className="w-full p-2 border border-gray-300 rounded-md"
+                  className="w-full p-2 bg-white border border-gray-300 rounded-md"
                   rows={2}
                 />
               ) : (

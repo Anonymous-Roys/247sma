@@ -279,176 +279,114 @@ const Investments: React.FC = () => {
 
       {/* Header */}
       <div className="mb-6">
-        <h1 className="text-2xl font-bold text-green-800">AgriInvest Dashboard</h1>
+        <h1 className="text-2xl font-bold text-green-800">Invest Dashboard</h1>
         <p className="text-gray-600">Connect with farmers, invest in agriculture, grow your portfolio</p>
       </div>
       
       {/* Tabs */}
       <div className="bg-white rounded-lg shadow-sm">
-        <div className="flex p-4 space-x-8 border-b border-gray-200">
-          {['Farm Investment', 'Crowdfunding'].map((tab) => (
-            <button
-              key={tab}
-              className={`py-2 px-1 font-medium text-lg ${
-                activeTab === tab 
-                  ? 'border-b-2 border-green-700 text-green-700' 
-                  : 'text-gray-500'
-              }`}
-              onClick={() => setActiveTab(tab as 'Farm Investment' | 'Crowdfunding')}
-            >
-              {tab}
-            </button>
-          ))}
+  {/* Tabs */}
+  <div className="flex flex-wrap justify-between p-4 space-x-2 border-b border-gray-200 sm:space-x-4">
+    {['Farm Investment', 'Crowdfunding'].map((tab) => (
+      <button
+        key={tab}
+        className={`py-2 text-sm sm:text-base font-medium ${
+          activeTab === tab 
+            ? 'border-b-2 border-green-700 text-green-700' 
+            : 'text-gray-500'
+        }`}
+        onClick={() => setActiveTab(tab as 'Farm Investment' | 'Crowdfunding')}
+      >
+        {tab}
+      </button>
+    ))}
+  </div>
+
+  {/* Stats Grid */}
+  <div className="grid grid-cols-1 gap-4 p-4 sm:grid-cols-2 xl:grid-cols-5">
+    {/* Each Card */}
+    {[{
+      title: "Total Investments",
+      subtitle: "Growth (YTD)",
+      subtitleValue: "+18% ↑",
+      label: "Amount",
+      value: "$15,320",
+      icon: <DollarSign className="w-full h-full text-green-600" />,
+      chartPath: "M0,20 L10,18 L20,15 L30,10 L40,15 L50,5 L60,12 L70,8 L80,16 L90,12 L100,8"
+    }, {
+      title: "Average Return",
+      subtitle: "Change",
+      subtitleValue: "+1.2% ↑",
+      label: "Rate",
+      value: "7.9%",
+      icon: <TrendingUp className="w-full h-full text-green-600" />,
+      chartPath: "M0,15 L10,13 L20,18 L30,15 L40,12 L50,15 L60,10 L70,12 L80,8 L90,5 L100,8"
+    }, {
+      title: "Active Investments",
+      subtitle: "This Month",
+      subtitleValue: "+3 ↑",
+      label: "Total",
+      value: "12",
+      icon: <Calendar className="w-full h-full text-green-600" />,
+      chartPath: "M0,20 L10,18 L20,15 L30,10 L40,15 L50,5 L60,12 L70,8 L80,16 L90,12 L100,8"
+    }, {
+      title: "Community Impact",
+      subtitle: "Farmers Supported",
+      subtitleValue: "82",
+      label: "Hectares Cultivated",
+      value: "156",
+      icon: <Users className="w-full h-full text-green-600" />,
+      chartPath: "M0,10 L10,12 L20,15 L30,14 L40,18 L50,16 L60,20 L70,18 L80,22 L90,20 L100,25"
+    }].map((item, i) => (
+      <div key={i} className="flex flex-col justify-between p-4 text-xs bg-white border border-gray-100 rounded-lg shadow-sm sm:text-sm">
+        <div className="flex items-start justify-between">
+          <div>
+            <div className="font-medium text-gray-500">{item.title}</div>
+            <div className="mt-1">
+              <span className="text-gray-600">{item.subtitle}</span>
+              <span className="ml-2 text-green-600">{item.subtitleValue}</span>
+            </div>
+            <div className="mt-1 font-semibold text-green-700">
+              <span className="text-gray-600">{item.label}</span>
+              <span className="ml-2">{item.value}</span>
+            </div>
+          </div>
+          <div className="w-10 h-10 p-2 bg-green-100 rounded-full">{item.icon}</div>
         </div>
-
-        {/* Stats Section */}
-        <div className="grid grid-cols-1 gap-4 p-4 md:grid-cols-2 lg:grid-cols-5">
-          
-          {/* Total Investment */}
-          <div className="flex flex-col justify-between p-4 bg-white border border-gray-100 rounded-lg shadow-sm">
-            <div className="flex items-center justify-between">
-              <div>
-                <div className="text-sm font-medium text-gray-500">Total Investments</div>
-                <div className="flex items-center mt-1 text-sm">
-                  <span className="text-gray-600">Growth (YTD)</span>
-                  <span className="ml-2 text-green-600">+18% ↑</span>
-                </div>
-                <div className="flex items-center mt-1">
-                  <span className="text-gray-600">Amount</span>
-                  <span className="ml-2 font-semibold text-green-700">$15,320</span>
-                </div>
-              </div>
-              <div className="w-12 h-12 p-2 bg-green-100 rounded-full">
-                <DollarSign className="w-full h-full text-green-600" />
-              </div>
-            </div>
-            <div className="mt-4">
-              <svg viewBox="0 0 100 30" className="w-full h-8">
-                <path
-                  d="M0,20 L10,18 L20,15 L30,10 L40,15 L50,5 L60,12 L70,8 L80,16 L90,12 L100,8"
-                  fill="none"
-                  stroke="#4ade80"
-                  strokeWidth="2"
-                />
-              </svg>
-            </div>
-          </div>
-
-          {/* Average Return Rate */}
-          <div className="flex flex-col justify-between p-4 bg-white border border-gray-100 rounded-lg shadow-sm">
-            <div className="flex items-center justify-between">
-              <div>
-                <div className="text-sm font-medium text-gray-500">Average Return</div>
-                <div className="flex items-center mt-1 text-sm">
-                  <span className="text-gray-600">Change</span>
-                  <span className="ml-2 text-green-600">+1.2% ↑</span>
-                </div>
-                <div className="flex items-center mt-1">
-                  <span className="text-gray-600">Rate</span>
-                  <span className="ml-2 font-semibold text-green-700">7.9%</span>
-                </div>
-              </div>
-              <div className="w-12 h-12 p-2 bg-green-100 rounded-full">
-                <TrendingUp className="w-full h-full text-green-600" />
-              </div>
-            </div>
-            <div className="mt-4">
-              <svg viewBox="0 0 100 30" className="w-full h-8">
-                <path
-                  d="M0,15 L10,13 L20,18 L30,15 L40,12 L50,15 L60,10 L70,12 L80,8 L90,5 L100,8"
-                  fill="none"
-                  stroke="#4ade80"
-                  strokeWidth="2"
-                />
-              </svg>
-            </div>
-          </div>
-
-          {/* Active Investments */}
-          <div className="flex flex-col justify-between p-4 bg-white border border-gray-100 rounded-lg shadow-sm">
-            <div className="flex items-center justify-between">
-              <div>
-                <div className="text-sm font-medium text-gray-500">Active Investments</div>
-                <div className="flex items-center mt-1 text-sm">
-                  <span className="text-gray-600">This Month</span>
-                  <span className="ml-2 text-green-600">+3 ↑</span>
-                </div>
-                <div className="flex items-center mt-1">
-                  <span className="text-gray-600">Total</span>
-                  <span className="ml-2 font-semibold text-green-700">12</span>
-                </div>
-              </div>
-              <div className="w-12 h-12 p-2 bg-green-100 rounded-full">
-                <Calendar className="w-full h-full text-green-600" />
-              </div>
-            </div>
-            <div className="mt-4">
-              <svg viewBox="0 0 100 30" className="w-full h-8">
-                <path
-                  d="M0,20 L10,18 L20,15 L30,10 L40,15 L50,5 L60,12 L70,8 L80,16 L90,12 L100,8"
-                  fill="none"
-                  stroke="#4ade80"
-                  strokeWidth="2"
-                />
-              </svg>
-            </div>
-          </div>
-
-          {/* Impact Metrics */}
-          <div className="flex flex-col justify-between p-4 bg-white border border-gray-100 rounded-lg shadow-sm">
-            <div className="flex items-center justify-between">
-              <div>
-                <div className="text-sm font-medium text-gray-500">Community Impact</div>
-                <div className="flex items-center mt-1 text-sm">
-                  <span className="text-gray-600">Farmers Supported</span>
-                  <span className="ml-2 text-green-600">82</span>
-                </div>
-                <div className="flex items-center mt-1">
-                  <span className="text-gray-600">Hectares Cultivated</span>
-                  <span className="ml-2 font-semibold text-green-700">156</span>
-                </div>
-              </div>
-              <div className="w-12 h-12 p-2 bg-green-100 rounded-full">
-                <Users className="w-full h-full text-green-600" />
-              </div>
-            </div>
-            <div className="mt-4">
-              <svg viewBox="0 0 100 30" className="w-full h-8">
-                <path
-                  d="M0,10 L10,12 L20,15 L30,14 L40,18 L50,16 L60,20 L70,18 L80,22 L90,20 L100,25"
-                  fill="none"
-                  stroke="#4ade80"
-                  strokeWidth="2"
-                />
-              </svg>
-            </div>
-          </div>
-
-          {/* Create Campaign Card */}
-          <div className="flex flex-col justify-between p-6 text-white rounded-lg shadow-sm bg-gradient-to-r from-green-600 to-green-700">
-            <div className="flex items-start gap-4">
-              <div className="mt-2">
-                <svg width="40" height="40" viewBox="0 0 24 24" fill="none">
-                  <circle cx="12" cy="12" r="10" stroke="white" strokeWidth="2" />
-                  <path d="M12 8V16M8 12H16" stroke="white" strokeWidth="2" strokeLinecap="round"/>
-                </svg>
-              </div>
-              <div>
-                <h2 className="text-lg font-semibold">Create a new Investment Campaign</h2>
-                <p className="mt-1 text-sm text-green-100">
-                  Start a new campaign to raise funds for your next agricultural project.
-                </p>
-                <button 
-                  className="px-4 py-2 mt-3 text-sm font-medium text-green-700 transition-colors bg-white rounded-lg hover:bg-green-50"
-                  onClick={() => setShowCreateModal(true)}
-                >
-                  Get Started
-                </button>
-              </div>
-            </div>
-          </div>
+        <div className="mt-4 overflow-hidden">
+          <svg viewBox="0 0 100 30" className="w-full h-8">
+            <path d={item.chartPath} fill="none" stroke="#4ade80" strokeWidth="2" />
+          </svg>
         </div>
       </div>
+    ))}
+
+    {/* CTA Card */}
+    <div className="flex flex-col justify-between p-4 text-white rounded-lg shadow-sm bg-gradient-to-r from-green-600 to-green-700">
+      <div>
+        <div className="flex items-start gap-4">
+          <svg width="32" height="32" viewBox="0 0 24 24" fill="none">
+            <circle cx="12" cy="12" r="10" stroke="white" strokeWidth="2" />
+            <path d="M12 8V16M8 12H16" stroke="white" strokeWidth="2" strokeLinecap="round"/>
+          </svg>
+          <div className="text-sm">
+            <h2 className="text-base font-semibold sm:text-lg">Create New Campaign</h2>
+            <p className="mt-1 text-xs text-green-100 sm:text-sm">
+              Raise funds for your next agricultural project.
+            </p>
+          </div>
+        </div>
+        <button
+          className="px-3 py-2 mt-3 text-sm font-medium text-green-700 bg-white rounded-lg hover:bg-green-100"
+          onClick={() => setShowCreateModal(true)}
+        >
+          Get Started
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
 
       {/* My Campaigns Section */}
       <div className="p-4 mt-8 bg-white rounded-lg shadow-sm">

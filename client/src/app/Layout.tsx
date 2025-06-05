@@ -39,12 +39,12 @@ export default function FarmersLayout() {
         const data = await res.json();
         // console.log(data)
         if (data?.user) {
-         setUser({
-  name: data.user.fullname,
-  email: data.user.email,
-  avatar: data.user.avatar || "", // fallback to empty string or a default image URL
-  initials: getInitials(data.user.fullname),
-});
+          setUser({
+            name: data.user.fullname,
+            email: data.user.email,
+            avatar: data.user.avatar || "", // fallback to empty string or a default image URL
+            initials: getInitials(data.user.fullname),
+          });
 
         }
 

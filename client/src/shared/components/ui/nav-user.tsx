@@ -29,6 +29,7 @@ import {
   useSidebar,
 } from "@/shared/components/ui/sidebar"
 import { useNavigate } from "react-router-dom"
+import { BASE_URL } from "@/shared/lib/utils"
 
 export function NavUser({
   user,
@@ -48,7 +49,7 @@ const navigate = useNavigate();
       const token = sessionStorage.getItem("token");
 
       if (token) {
-        await fetch("https://two47sma.onrender.com/api/logout", {
+        await fetch(`${BASE_URL}/api/logout`, {
           method: "POST",
           headers: {
             Authorization: `Bearer ${token}`,
@@ -96,8 +97,10 @@ const navigate = useNavigate();
             <DropdownMenuLabel className="p-0 font-normal">
               <div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
                 <Avatar className="w-8 h-8 rounded-lg">
-                  <AvatarImage src={user.avatar} alt={user.name} />
-                  <AvatarFallback className="rounded-lg">EA</AvatarFallback>
+               <AvatarImage src={user.avatar} alt={user.name} />
+                <AvatarFallback className="rounded-lg">
+    {user?.initials || "U"}
+  </AvatarFallback>
                 </Avatar>
                 <div className="grid flex-1 text-sm leading-tight text-left">
                   <span className="font-semibold truncate">{user.name}</span>
@@ -107,22 +110,22 @@ const navigate = useNavigate();
             </DropdownMenuLabel>
             <DropdownMenuSeparator />
             <DropdownMenuGroup>
-              <DropdownMenuItem>
+              <DropdownMenuItem onClick={()=>navigate('/farmers/overview')}>
                 <Sparkles />
                 Farmers XP
               </DropdownMenuItem>
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
             <DropdownMenuGroup>
-              <DropdownMenuItem>
+              <DropdownMenuItem onClick={()=> navigate('/farmers/profile')}>
                 <BadgeCheck />
                 Account
               </DropdownMenuItem>
-              <DropdownMenuItem>
+              <DropdownMenuItem onClick={()=> navigate('/farmers/profile')}>
                 <CreditCard />
                 Billing
               </DropdownMenuItem>
-              <DropdownMenuItem>
+              <DropdownMenuItem onClick={()=> navigate('/farmers/notification')}>
                 <Bell />
                 Notifications
               </DropdownMenuItem>

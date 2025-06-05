@@ -104,68 +104,70 @@ export default function AMAnalytics() {
 
         <div className="grid grid-cols-1 gap-6 mt-8 lg:grid-cols-12">
           {/* Chart Section */}
-          <div className="bg-white rounded-lg shadow lg:col-span-8">
-            <div className="p-4">
-              <div className="flex items-center justify-between mb-4">
-                <h3 className="text-lg font-medium text-gray-800">Timely Analytics</h3>
-                <div className="flex space-x-2">
-                  {['1D', '5D', '1M', '6M', '1Y', '5Y', 'Max'].map((time) => (
-                    <button
-                      key={time}
-                      onClick={() => setTimeframe(time)}
-                      className={`px-3 py-1 text-xs rounded ${
-                        timeframe === time
-                          ? 'bg-green-600 text-white'
-                          : 'text-gray-600 hover:bg-gray-100'
-                      }`}
-                    >
-                      {time}
-                    </button>
-                  ))}
-                </div>
-              </div>
-              
-              <div className="h-80">
-                <ResponsiveContainer width="100%" height="100%">
-                  <AreaChart
-                    data={chartData}
-                    margin={{ top: 10, right: 30, left: 0, bottom: 0 }}
-                  >
-                    <defs>
-                      <linearGradient id="colorValue" x1="0" y1="0" x2="0" y2="1">
-                        <stop offset="5%" stopColor="#16a34a" stopOpacity={0.3} />
-                        <stop offset="95%" stopColor="#16a34a" stopOpacity={0} />
-                      </linearGradient>
-                    </defs>
-                    <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f0f0f0" />
-                    <XAxis 
-                      dataKey="time" 
-                      axisLine={false} 
-                      tickLine={false}
-                      tick={{ fontSize: 12, fill: '#888' }}
-                    />
-                    <YAxis 
-                      domain={[0, 'dataMax + 2000']}
-                      axisLine={false}
-                      tickLine={false}
-                      tick={{ fontSize: 12, fill: '#888' }}
-                      tickFormatter={(value) => `$${value}`}
-                    />
-                    <Tooltip content={<CustomTooltip />} />
-                    <Area 
-                      type="monotone" 
-                      dataKey="value" 
-                      stroke="#16a34a" 
-                      fillOpacity={1} 
-                      fill="url(#colorValue)" 
-                      strokeWidth={2}
-                    />
-                  </AreaChart>
-                </ResponsiveContainer>
-              </div>
-            </div>
-          </div>
-          
+          <div className="w-full max-w-full rounded-lg shadow bg:-white foverflow-hidden lg:col-span-4">
+  <div className="p-4">
+    {/* Header */}
+    <div className="flex flex-col gap-2 mb-4 sm:flex-row sm:items-center sm:justify-between">
+      <h3 className="text-base font-semibold text-gray-800 sm:text-lg">Timely Analytics</h3>
+      <div className="flex flex-wrap gap-2">
+        {['1D', '5D', '1M', '6M', '1Y', '5Y', 'Max'].map((time) => (
+          <button
+            key={time}
+            onClick={() => setTimeframe(time)}
+            className={`px-3 py-1 text-xs rounded transition ${
+              timeframe === time
+                ? 'bg-green-600 text-white'
+                : 'text-gray-600 hover:bg-gray-100'
+            }`}
+          >
+            {time}
+          </button>
+        ))}
+      </div>
+    </div>
+
+    {/* Chart */}
+    <div className="w-full h-64 sm:h-72 md:h-80">
+      <ResponsiveContainer width="100%" height="100%">
+        <AreaChart
+          data={chartData}
+          margin={{ top: 10, right: 30, left: 0, bottom: 0 }}
+        >
+          <defs>
+            <linearGradient id="colorValue" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="5%" stopColor="#16a34a" stopOpacity={0.3} />
+              <stop offset="95%" stopColor="#16a34a" stopOpacity={0} />
+            </linearGradient>
+          </defs>
+          <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f0f0f0" />
+          <XAxis 
+            dataKey="time" 
+            axisLine={false} 
+            tickLine={false}
+            tick={{ fontSize: 12, fill: '#888' }}
+          />
+          <YAxis 
+            domain={[0, 'dataMax + 2000']}
+            axisLine={false}
+            tickLine={false}
+            tick={{ fontSize: 12, fill: '#888' }}
+            tickFormatter={(value) => `$${value}`}
+          />
+          <Tooltip content={<CustomTooltip />} />
+          <Area 
+            type="monotone" 
+            dataKey="value" 
+            stroke="#16a34a" 
+            fillOpacity={1} 
+            fill="url(#colorValue)" 
+            strokeWidth={2}
+          />
+        </AreaChart>
+      </ResponsiveContainer>
+    </div>
+  </div>
+</div>
+
           {/* Trade Section */}
           <div className="flex flex-col gap-4 lg:col-span-4">
             {/* Balance */}
