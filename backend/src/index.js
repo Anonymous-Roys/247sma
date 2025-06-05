@@ -5,7 +5,7 @@ const { MongoClient, ServerApiVersion } = require('mongodb');
 const bodyParser = require('body-parser');
 const cors = require('cors');
 const authRoutes = require('./routes/auth');
-const orderRoutes = require('./routes/orderRoutes');
+// const orderRoutes = require('./routes/orderRoutes');
 
 const app = express();
 
@@ -16,7 +16,7 @@ app.use(cors());
 // Routes
 app.use('/api', authRoutes);
 app.use('/api/products', require('./routes/product'));
-app.use('/api/orders', orderRoutes);
+// app.use('/api/orders', orderRoutes);
 
 // Database connection
 mongoose.connect(process.env.MONGODB_URI)
