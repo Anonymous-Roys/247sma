@@ -35,7 +35,7 @@ export default function ProductsPage() {
         }
        
         const response = await axios.get(
-          `${BASE_URL}api/products/farmer/${data.user._id}`,
+          `${BASE_URL}/api/products/farmer/${data.user._id}`,
           {
             headers: {
               Authorization: `Bearer ${token}`,
