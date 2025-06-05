@@ -3,6 +3,7 @@ import { useState, useEffect } from 'react';
 import axios from 'axios';
 import ProductForm from '../../components/product/ProductForm';
 import { useNavigate } from 'react-router-dom';
+import { BASE_URL } from '@/shared/lib/utils';
 
 export default function ProductsPage() {
   const [products, setProducts] = useState<any[]>([]);
@@ -21,7 +22,7 @@ export default function ProductsPage() {
       try {
         const token = sessionStorage.getItem('token');
         
-        const res = await fetch("https://two47sma.onrender.com/api/me", {
+        const res = await fetch(`${BASE_URL}/api/me`, {
           headers: { Authorization: `Bearer ${token}` },
         });
 
@@ -34,7 +35,7 @@ export default function ProductsPage() {
         }
        
         const response = await axios.get(
-          `https://two47sma.onrender.com/api/products/farmer/${data.user._id}`,
+          `${BASE_URL}api/products/farmer/${data.user._id}`,
           {
             headers: {
               Authorization: `Bearer ${token}`,
@@ -65,7 +66,7 @@ const handleDelete = async (productId: string) => {
   try {
     const token = sessionStorage.getItem('token');
     const response = await axios.delete(
-      `https://two47sma.onrender.com/api/products/${productId}`,
+      `${BASE_URL}/api/products/${productId}`,
       {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -93,7 +94,7 @@ const handleDelete = async (productId: string) => {
       const user = JSON.parse(sessionStorage.getItem('user') || '{}');
 
       const response = await axios.post(
-        'https://two47sma.onrender.com/api/products',
+        `${BASE_URL}/api/products`,
         { ...productData, farmerId: user._id },
         {
           headers: {
