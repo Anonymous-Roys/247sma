@@ -16,7 +16,7 @@ export default function Profile() {
       if (!token) return;
 
       try {
-        const res = await fetch('http://localhost:10000/api/me', {
+        const res = await fetch('https://two47sma.onrender.com/api/me', {
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -65,7 +65,7 @@ const [firstName = '', lastName = ''] = (data.user.fullname || '').trim().split(
   const handleSave = async () => {
     const token = sessionStorage.getItem('token');
     try {
-      const res = await fetch('http://localhost:10000/api/update-profile', {
+      const res = await fetch('https://two47sma.onrender.com/api/update-profile', {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',

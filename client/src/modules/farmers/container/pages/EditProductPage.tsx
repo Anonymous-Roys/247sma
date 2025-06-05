@@ -17,7 +17,7 @@ export default function EditProductPage() {
       try {
         const token = sessionStorage.getItem('token');
         const response = await axios.get(
-          `http://localhost:10000/api/products/${id}`,
+          `https://two47sma.onrender.com/api/products/${id}`,
           {
             headers: {
               Authorization: `Bearer ${token}`,
@@ -39,7 +39,7 @@ export default function EditProductPage() {
     try {
       const token = sessionStorage.getItem('token');
       const response = await axios.put(
-        `http://localhost:10000/api/products/${id}`,
+        `https://two47sma.onrender.com/api/products/${id}`,
         productData,
         {
           headers: {

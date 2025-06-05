@@ -18,7 +18,7 @@ const Header = ({ user }: HeaderProps) => {
  
 
   return (
-    <div className="sticky top-0 z-10 p-3 right-2 left-2  bg-gradient-to-t from-[#dcdcdc0a] to-[#DCDCDC]">
+    <div className="sticky top-0 z-20 p-3 right-2 left-2  bg-gradient-to-t from-[#dcdcdc0a] to-[#DCDCDC]">
       <header className="flex items-center justify-between w-full gap-2 p-2 bg-white rounded-md shadow-md">
         <div className="relative flex flex-grow md:mx-4">
           <Search className="absolute left-3 top-2.5 text-gray-400" />

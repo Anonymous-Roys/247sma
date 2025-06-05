@@ -15,6 +15,7 @@ import {
 } from "@/shared/components/ui/sidebar"
 import { useEffect, useState } from "react";
 import { User } from "../Layout";
+import { BASE_URL } from "@/shared/lib/utils";
 
 export default function Page() {
   const [user, setUser] = useState<User | null>(null);
@@ -34,7 +35,7 @@ export default function Page() {
         }
   
         try {
-          const res = await fetch("http://localhost:10000/api/me", {
+          const res = await fetch(`${BASE_URL}/api/me`, {
             headers: { Authorization: `Bearer ${token}` },
           });
   

@@ -21,7 +21,7 @@ export default function ProductsPage() {
       try {
         const token = sessionStorage.getItem('token');
         
-        const res = await fetch("http://localhost:10000/api/me", {
+        const res = await fetch("https://two47sma.onrender.com/api/me", {
           headers: { Authorization: `Bearer ${token}` },
         });
 
@@ -34,7 +34,7 @@ export default function ProductsPage() {
         }
        
         const response = await axios.get(
-          `http://localhost:10000/api/products/farmer/${data.user._id}`,
+          `https://two47sma.onrender.com/api/products/farmer/${data.user._id}`,
           {
             headers: {
               Authorization: `Bearer ${token}`,
@@ -65,7 +65,7 @@ const handleDelete = async (productId: string) => {
   try {
     const token = sessionStorage.getItem('token');
     const response = await axios.delete(
-      `http://localhost:10000/api/products/${productId}`,
+      `https://two47sma.onrender.com/api/products/${productId}`,
       {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -93,7 +93,7 @@ const handleDelete = async (productId: string) => {
       const user = JSON.parse(sessionStorage.getItem('user') || '{}');
 
       const response = await axios.post(
-        'http://localhost:10000/api/products',
+        'https://two47sma.onrender.com/api/products',
         { ...productData, farmerId: user._id },
         {
           headers: {

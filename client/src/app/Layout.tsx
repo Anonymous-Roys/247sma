@@ -3,6 +3,7 @@ import Header from "@/shared/components/custom/_header";
 import { AppSidebar } from "@/shared/components/custom/app-sidebar";
 import { SidebarProvider, SidebarTrigger } from "@/shared/components/ui/sidebar";
 import { Outlet } from "react-router-dom";
+import { BASE_URL } from "@/shared/lib/utils";
 
 
 export type User = {
@@ -29,7 +30,7 @@ export default function FarmersLayout() {
       }
 
       try {
-        const res = await fetch("http://localhost:10000/api/me", {
+        const res = await fetch(`${BASE_URL}/api/me`, {
           headers: { Authorization: `Bearer ${token}` },
         });
 
