@@ -1,6 +1,6 @@
 
 import { Bell} from 'lucide-react';
-import ProfileSummary from '../../components/profile/ProfileSummary';
+import ProfileSummary from '../../../components/profile/ProfileSummary';
 
 export default function FarmNotifications() {
 

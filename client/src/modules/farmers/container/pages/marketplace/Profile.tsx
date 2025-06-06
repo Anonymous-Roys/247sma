@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Edit2, Camera } from 'lucide-react';
-import ProfileSummary from '../../components/profile/ProfileSummary';
+import ProfileSummary from '../../../components/profile/ProfileSummary';
 import { BASE_URL } from '@/shared/lib/utils';
 
 

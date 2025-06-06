@@ -1,271 +1,566 @@
-import { useState } from 'react';
-import {  ChevronDown, Calendar } from 'lucide-react';
-import FarmMap from '@/modules/farmers/components/soilAnalytics/Map';
+import { useState, useEffect } from 'react';
+import { Search, Thermometer, Maximize, MapPin, Plus, Minus, Eye, EyeOff, Settings, Calendar, TrendingUp, Droplets, Sun, Cloud, AlertTriangle, CheckCircle, Clock, BarChart3, Users, Truck, Wrench } from 'lucide-react';
 
-// Farm data
-const farmData = {
-  temperature: '38°C',
-  soilMoisture: 50,
+interface Farm {
+  id: string;
+  name: string;
+  x: string;
+  y: string;
+  width: string;
+  height: string;
+  color: string;
+  cropType: string;
+  plantedDate: string;
+  harvestDate: string;
+  health: 'excellent' | 'good' | 'fair' | 'poor';
+  soilMoisture: number;
+  workers: number;
+  area: number;
+}
+
+interface Crop {
+  name: string;
+  growth: number;
+  image: string;
+  profitability: number;
+  difficulty: 'easy' | 'medium' | 'hard';
+  season: string;
+  daysToHarvest: number;
+}
+
+interface WeatherForecast {
+  day: string;
+  temp: number;
+  condition: string;
+  humidity: number;
+  precipitation: number;
+}
+
+interface FarmData {
+  temperature: string;
+  humidity: number;
+  soilMoisture: number;
+  farms: Farm[];
+  crops: Crop[];
+  weather: WeatherForecast[];
+}
+
+const mockFarmData: FarmData = {
+  temperature: "24°C",
+  humidity: 65,
+  soilMoisture: 72,
   farms: [
-    { id: 1, name: 'ABY Farm', color: 'bg-green-200', x: 220, y: 210, width: 80, height: 90 },
-    { id: 2, name: 'YNS Farm', color: 'bg-orange-200', x: 325, y: 145, width: 70, height: 50 },
-    { id: 3, name: 'ARD Farm', color: 'bg-red-200', x: 365, y: 325, width: 70, height: 60 },
-    { id: 4, name: 'BDY', color: 'bg-orange-200', x: 225, y: 145, width: 40, height: 30 },
+    { id: '1', name: 'North Farm', x: '10%', y: '15%', width: '25%', height: '20%', color: 'bg-green-400', cropType: 'Wheat', plantedDate: '2024-03-15', harvestDate: '2024-07-10', health: 'excellent', soilMoisture: 75, workers: 8, area: 12.5 },
+    { id: '2', name: 'South Farm', x: '45%', y: '35%', width: '30%', height: '25%', color: 'bg-yellow-400', cropType: 'Corn', plantedDate: '2024-04-01', harvestDate: '2024-08-15', health: 'good', soilMoisture: 68, workers: 12, area: 18.2 },
+    { id: '3', name: 'East Farm', x: '20%', y: '65%', width: '20%', height: '18%', color: 'bg-orange-400', cropType: 'Tomatoes', plantedDate: '2024-04-20', harvestDate: '2024-07-30', health: 'fair', soilMoisture: 82, workers: 6, area: 8.5 },
+    { id: '4', name: 'West Farm', x: '65%', y: '10%', width: '22%', height: '22%', color: 'bg-blue-400', cropType: 'Potatoes', plantedDate: '2024-03-30', harvestDate: '2024-08-05', health: 'excellent', soilMoisture: 71, workers: 10, area: 15.3 },
+    { id: '5', name: 'Central Farm', x: '50%', y: '60%', width: '28%', height: '15%', color: 'bg-purple-400', cropType: 'Soybeans', plantedDate: '2024-04-10', harvestDate: '2024-09-01', health: 'good', soilMoisture: 79, workers: 9, area: 11.8 }
   ],
-  nutrients: {
-    weeks: ['Week 01', 'Week 02', 'Week 03'],
-    nitrogen: [430, 250, 350],
-    phosphorus: [520, 220, 1150],
-    potassium: [600, 370, 480],
-  },
   crops: [
-    { name: 'Mango', growth: 45, image: '/api/placeholder/190/120' },
-    { name: 'Maize', growth: 14, image: '/api/placeholder/190/120' },
-    { name: 'Cassava', growth: 23, image: '/api/placeholder/190/120' },
-    { name: 'Rice', growth: 22, image: '/api/placeholder/190/120' },
-    { name: 'Plantain', growth: 9, image: '/api/placeholder/190/120' },
+    { name: 'Premium Wheat', growth: 85, image: 'https://images.unsplash.com/photo-1574323347407-f5e1ad6d020b?w=300&h=200&fit=crop', profitability: 92, difficulty: 'easy', season: 'Spring', daysToHarvest: 120 },
+    { name: 'Sweet Corn', growth: 72, image: 'https://images.unsplash.com/photo-1551754655-cd27e38d2076?w=300&h=200&fit=crop', profitability: 78, difficulty: 'medium', season: 'Summer', daysToHarvest: 90 },
+    { name: 'Cherry Tomatoes', growth: 68, image: 'https://images.unsplash.com/photo-1546470427-e26264be0b0d?w=300&h=200&fit=crop', profitability: 88, difficulty: 'hard', season: 'Summer', daysToHarvest: 75 },
+    { name: 'Organic Potatoes', growth: 91, image: 'https://images.unsplash.com/photo-1518977676601-b53f82aba655?w=300&h=200&fit=crop', profitability: 65, difficulty: 'easy', season: 'Spring', daysToHarvest: 110 },
+    { name: 'Soybeans', growth: 79, image: 'https://images.unsplash.com/photo-1509440159596-0249088772ff?w=300&h=200&fit=crop', profitability: 71, difficulty: 'medium', season: 'Summer', daysToHarvest: 100 }
   ],
-  recommendations: [
-    {
-      title: 'How to grow your yam fields with the current moisture levels of your soil',
-      category: 'Crop Growth',
-      content: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation...'
-    },
-    {
-      title: 'How to grow your yam fields with the current moisture levels of your soil',
-      category: 'Crop Growth',
-      content: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.'
-    }
-  ],
-  phReading: 13
+  weather: [
+    { day: 'Today', temp: 24, condition: 'sunny', humidity: 65, precipitation: 0 },
+    { day: 'Tomorrow', temp: 26, condition: 'partly-cloudy', humidity: 58, precipitation: 10 },
+    { day: 'Day 3', temp: 22, condition: 'rainy', humidity: 78, precipitation: 85 },
+    { day: 'Day 4', temp: 25, condition: 'sunny', humidity: 62, precipitation: 0 },
+    { day: 'Day 5', temp: 23, condition: 'cloudy', humidity: 71, precipitation: 20 }
+  ]
 };
 
 export default function SoilAnalytics() {
-  const [activeTimeframe, setActiveTimeframe] = useState('Day');
-  const [sensor] = useState('sensor_1');
-  
+  const [search, setSearch] = useState('');
+  const [selectedFarm, setSelectedFarm] = useState<Farm | null>(null);
+  const [zoomLevel, setZoomLevel] = useState(1);
+  const [showLabels, setShowLabels] = useState(true);
+  const [activeTab, setActiveTab] = useState<'overview' | 'crops' | 'weather' | 'analytics'>('overview');
+  const [farmData] = useState<FarmData>(mockFarmData);
+  const [currentTime, setCurrentTime] = useState(new Date());
+
+  useEffect(() => {
+    const timer = setInterval(() => setCurrentTime(new Date()), 1000);
+    return () => clearInterval(timer);
+  }, []);
+
+  const filteredFarms = farmData.farms.filter(farm =>
+    farm.name.toLowerCase().includes(search.toLowerCase()) ||
+    farm.cropType.toLowerCase().includes(search.toLowerCase())
+  );
+
+
+  const getHealthIcon = (health: string) => {
+    switch (health) {
+      case 'excellent': return <CheckCircle className="w-4 h-4 text-green-500" />;
+      case 'good': return <CheckCircle className="w-4 h-4 text-yellow-500" />;
+      case 'fair': return <AlertTriangle className="w-4 h-4 text-orange-500" />;
+      case 'poor': return <AlertTriangle className="w-4 h-4 text-red-500" />;
+      default: return null;
+    }
+  };
+
+  const getWeatherIcon = (condition: string) => {
+    switch (condition) {
+      case 'sunny': return <Sun className="w-5 h-5 text-yellow-500" />;
+      case 'partly-cloudy': return <Cloud className="w-5 h-5 text-gray-400" />;
+      case 'cloudy': return <Cloud className="w-5 h-5 text-gray-600" />;
+      case 'rainy': return <Droplets className="w-5 h-5 text-blue-500" />;
+      default: return <Sun className="w-5 h-5" />;
+    }
+  };
+
+  const getDifficultyColor = (difficulty: string) => {
+    switch (difficulty) {
+      case 'easy': return 'text-green-600 bg-green-100';
+      case 'medium': return 'text-yellow-600 bg-yellow-100';
+      case 'hard': return 'text-red-600 bg-red-100';
+      default: return 'text-gray-600 bg-gray-100';
+    }
+  };
+
+  const totalArea = farmData.farms.reduce((sum, farm) => sum + farm.area, 0);
+  const totalWorkers = farmData.farms.reduce((sum, farm) => sum + farm.workers, 0);
+  const avgSoilMoisture = farmData.farms.reduce((sum, farm) => sum + farm.soilMoisture, 0) / farmData.farms.length;
+
   return (
-    <div className="min-h-screen font-sans bg-white">
-      <div className="container px-4 py-6 mx-auto">
-        <div className="mb-4">
-          <h1 className="text-2xl font-bold text-gray-800">Farm For Me &gt; Soil Analytics</h1>
-        </div>
-        
-        <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
-          {/* Left column */}
+    <div className="min-h-screen p-4 bg-gray-50">
+      <div className="mx-auto max-w-7xl">
+        {/* Header */}
+        <div className="flex flex-col gap-4 mb-6 sm:flex-row sm:justify-between sm:items-center">
           <div>
-            
-          
-          <div>
-            {/* Farm Map */}
-            <FarmMap farmData={farmData}/>
+            <h3 className="text-2xl font-bold text-gray-900 sm:text-3xl">Soil Analytics</h3>
+            <p className="text-gray-600">{currentTime.toLocaleDateString()} • {currentTime.toLocaleTimeString()}</p>
           </div>
-           {/* Farm Practices */}
-            <div className="p-6 bg-white rounded-lg shadow">
-              <h2 className="mb-2 text-xl font-bold">Farm Practices for Best Production</h2>
-              <p className="mb-4 text-sm text-gray-600">These recommendations below are based on the farm data</p>
-              
-              <div className="space-y-6">
-                {farmData.recommendations.map((recommendation, index) => (
-                  <div key={index} className="pt-4 border-t">
-                    <div className="flex gap-4">
-                      <div className="flex items-center justify-center w-10 h-10 p-2 bg-green-100 rounded-md">
-                        <div className="text-green-600">
-                          <svg xmlns="http://www.w3.org/2000/svg" className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
-                          </svg>
+          <div className="flex gap-2">
+            <button className="flex items-center px-4 py-2 text-white bg-green-600 rounded-lg hover:bg-green-700">
+              <Plus className="w-4 h-4 mr-2" />
+              Add Farm
+            </button>
+            <button className="flex items-center px-4 py-2 text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50">
+              <Settings className="w-4 h-4 mr-2" />
+              Settings
+            </button>
+          </div>
+        </div>
+
+        {/* Quick Stats */}
+        <div className="grid grid-cols-2 gap-4 mb-6 sm:grid-cols-4">
+          <div className="p-4 bg-white rounded-lg shadow">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm text-gray-600">Total Area</p>
+                <p className="text-2xl font-bold text-gray-900">{totalArea.toFixed(1)}</p>
+                <p className="text-xs text-gray-500">hectares</p>
+              </div>
+              <BarChart3 className="w-8 h-8 text-green-500" />
+            </div>
+          </div>
+          <div className="p-4 bg-white rounded-lg shadow">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm text-gray-600">Workers</p>
+                <p className="text-2xl font-bold text-gray-900">{totalWorkers}</p>
+                <p className="text-xs text-gray-500">active</p>
+              </div>
+              <Users className="w-8 h-8 text-blue-500" />
+            </div>
+          </div>
+          <div className="p-4 bg-white rounded-lg shadow">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm text-gray-600">Soil Moisture</p>
+                <p className="text-2xl font-bold text-gray-900">{avgSoilMoisture.toFixed(0)}%</p>
+                <p className="text-xs text-gray-500">average</p>
+              </div>
+              <Droplets className="w-8 h-8 text-blue-400" />
+            </div>
+          </div>
+          <div className="p-4 bg-white rounded-lg shadow">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm text-gray-600">Temperature</p>
+                <p className="text-2xl font-bold text-gray-900">{farmData.temperature}</p>
+                <p className="text-xs text-gray-500">current</p>
+              </div>
+              <Thermometer className="w-8 h-8 text-orange-500" />
+            </div>
+          </div>
+        </div>
+
+        {/* Tab Navigation */}
+        <div className="flex p-1 mb-6 space-x-1 bg-gray-100 rounded-lg">
+          {[
+            { id: 'overview', label: 'Overview', icon: Eye },
+            { id: 'crops', label: 'Crops', icon: TrendingUp },
+            { id: 'weather', label: 'Weather', icon: Cloud },
+            { id: 'analytics', label: 'Analytics', icon: BarChart3 }
+          ].map(tab => {
+            const Icon = tab.icon;
+            return (
+              <button
+                key={tab.id}
+                onClick={() => setActiveTab(tab.id as any)}
+                className={`flex items-center px-4 py-2 rounded-md text-sm font-medium transition-colors ${
+                  activeTab === tab.id
+                    ? 'bg-white text-gray-900 shadow'
+                    : 'text-gray-600 hover:text-gray-900'
+                }`}
+              >
+                <Icon className="w-4 h-4 mr-2" />
+                {tab.label}
+              </button>
+            );
+          })}
+        </div>
+
+        {/* Main Content */}
+        {activeTab === 'overview' && (
+          <div className="space-y-6">
+            {/* Farm Map Section */}
+            <div className="relative p-4 bg-white rounded-lg shadow">
+              <div className="flex flex-col gap-4 mb-4 sm:flex-row sm:justify-between">
+                <div className="relative w-full sm:w-64">
+                  <Search className="absolute left-3 top-2.5 text-gray-400 h-5 w-5" />
+                  <input 
+                    type="text" 
+                    placeholder="Search farms or crops..." 
+                    className="w-full py-2 pl-10 pr-4 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
+                    value={search}
+                    onChange={(e) => setSearch(e.target.value)}
+                  />
+                </div>
+                <div className="flex gap-2">
+                  <button
+                    onClick={() => setShowLabels(!showLabels)}
+                    className={`flex items-center px-3 py-2 text-sm rounded-md ${
+                      showLabels ? 'bg-green-500 text-white' : 'bg-gray-200 text-gray-700'
+                    }`}
+                  >
+                    {showLabels ? <Eye className="w-4 h-4 mr-1" /> : <EyeOff className="w-4 h-4 mr-1" />}
+                    Labels
+                  </button>
+                  <div className="flex items-center px-3 py-2 text-sm text-white bg-green-500 rounded-md">
+                    <Thermometer className="w-4 h-4 mr-1" />
+                    <span>{farmData.temperature}</span>
+                  </div>
+                  <button className="p-2 bg-white border border-gray-300 rounded-md hover:bg-gray-50">
+                    <Maximize className="w-5 h-5 text-gray-600" />
+                  </button>
+                </div>
+              </div>
+
+              {/* Map Grid */}
+              <div className="relative w-full overflow-hidden border-2 border-green-200 border-dashed rounded-lg h-80 bg-green-50">
+                {filteredFarms.map((farm) => (
+                  <div 
+                    key={farm.id}
+                    className={`absolute ${farm.color} rounded-md border-2 border-white shadow-lg cursor-pointer transition-all duration-200 hover:scale-105 hover:shadow-xl ${
+                      selectedFarm?.id === farm.id ? 'ring-4 ring-blue-500' : ''
+                    }`}
+                    style={{
+                      left: farm.x,
+                      top: farm.y,
+                      width: farm.width,
+                      height: farm.height,
+                      transform: `scale(${zoomLevel})`
+                    }}
+                    onClick={() => setSelectedFarm(farm)}
+                  >
+                    {showLabels && (
+                      <div className="flex flex-col items-center justify-center h-full p-1 text-center">
+                        <div className="text-xs font-bold text-white drop-shadow-lg">{farm.name}</div>
+                        <div className="text-xs text-white/90 drop-shadow">{farm.cropType}</div>
+                        <div className="flex items-center mt-1">
+                          {getHealthIcon(farm.health)}
                         </div>
                       </div>
-                      <div className="flex-1">
-                        <h3 className="mb-2 font-medium text-green-600">{recommendation.title}</h3>
-                        <p className="mb-2 text-sm text-gray-600">{recommendation.content}</p>
-                        <div className="text-xs text-gray-500">
-                          <span className="font-medium">Category:</span> {recommendation.category}
+                    )}
+                  </div>
+                ))}
+              </div>
+
+              {/* Map Controls */}
+              <div className="absolute flex flex-col gap-2 bottom-4 left-4">
+                <button className="flex items-center justify-center w-10 h-10 bg-white rounded-lg shadow-lg hover:bg-gray-50">
+                  <MapPin className="w-5 h-5 text-gray-700" />
+                </button>
+                <button 
+                  onClick={() => setZoomLevel(Math.min(zoomLevel + 0.1, 2))}
+                  className="flex items-center justify-center w-10 h-10 font-bold bg-white rounded-lg shadow-lg hover:bg-gray-50"
+                >
+                  <Plus className="w-5 h-5" />
+                </button>
+                <button 
+                  onClick={() => setZoomLevel(Math.max(zoomLevel - 0.1, 0.5))}
+                  className="flex items-center justify-center w-10 h-10 font-bold bg-white rounded-lg shadow-lg hover:bg-gray-50"
+                >
+                  <Minus className="w-5 h-5" />
+                </button>
+              </div>
+
+              {/* Zoom indicator */}
+              <div className="absolute px-3 py-1 text-sm bg-white rounded-full shadow top-4 right-4">
+                {(zoomLevel * 100).toFixed(0)}%
+              </div>
+            </div>
+
+            {/* Selected Farm Details */}
+            {selectedFarm && (
+              <div className="p-6 bg-white rounded-lg shadow">
+                <h3 className="mb-4 text-xl font-bold text-gray-900">{selectedFarm.name} Details</h3>
+                <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
+                  <div>
+                    <p className="text-sm text-gray-600">Crop Type</p>
+                    <p className="font-semibold">{selectedFarm.cropType}</p>
+                  </div>
+                  <div>
+                    <p className="text-sm text-gray-600">Health Status</p>
+                    <div className="flex items-center gap-2">
+                      {getHealthIcon(selectedFarm.health)}
+                      <span className="font-semibold capitalize">{selectedFarm.health}</span>
+                    </div>
+                  </div>
+                  <div>
+                    <p className="text-sm text-gray-600">Soil Moisture</p>
+                    <p className="font-semibold">{selectedFarm.soilMoisture}%</p>
+                  </div>
+                  <div>
+                    <p className="text-sm text-gray-600">Workers</p>
+                    <p className="font-semibold">{selectedFarm.workers} people</p>
+                  </div>
+                  <div>
+                    <p className="text-sm text-gray-600">Area</p>
+                    <p className="font-semibold">{selectedFarm.area} hectares</p>
+                  </div>
+                  <div>
+                    <p className="text-sm text-gray-600">Planted Date</p>
+                    <p className="font-semibold">{new Date(selectedFarm.plantedDate).toLocaleDateString()}</p>
+                  </div>
+                  <div>
+                    <p className="text-sm text-gray-600">Harvest Date</p>
+                    <p className="font-semibold">{new Date(selectedFarm.harvestDate).toLocaleDateString()}</p>
+                  </div>
+                  <div>
+                    <p className="text-sm text-gray-600">Days to Harvest</p>
+                    <p className="font-semibold">
+                      {Math.max(0, Math.ceil((new Date(selectedFarm.harvestDate).getTime() - new Date().getTime()) / (1000 * 60 * 60 * 24)))} days
+                    </p>
+                  </div>
+                </div>
+                <div className="flex gap-2 mt-4">
+                  <button className="flex items-center px-4 py-2 text-white bg-blue-600 rounded-lg hover:bg-blue-700">
+                    <Truck className="w-4 h-4 mr-2" />
+                    Schedule Harvest
+                  </button>
+                  <button className="flex items-center px-4 py-2 text-gray-700 bg-gray-200 rounded-lg hover:bg-gray-300">
+                    <Wrench className="w-4 h-4 mr-2" />
+                    Maintenance
+                  </button>
+                </div>
+              </div>
+            )}
+          </div>
+        )}
+
+        {activeTab === 'crops' && (
+          <div className="bg-white rounded-lg shadow">
+            <div className="px-6 py-4 border-b border-gray-200">
+              <h2 className="text-xl font-semibold">Crop Recommendations</h2>
+              <p className="text-gray-600">Optimized for current season and conditions</p>
+            </div>
+            <div className="p-6">
+              <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+                {farmData.crops.map((crop, index) => (
+                  <div key={index} className="overflow-hidden transition-shadow bg-white border border-gray-200 rounded-lg shadow hover:shadow-lg">
+                    <div className="relative">
+                      <img src={crop.image} alt={crop.name} className="object-cover w-full h-48" />
+                      <div className="absolute top-2 right-2">
+                        <span className={`px-2 py-1 text-xs font-medium rounded-full ${getDifficultyColor(crop.difficulty)}`}>
+                          {crop.difficulty}
+                        </span>
+                      </div>
+                    </div>
+                    <div className="p-4">
+                      <h3 className="text-lg font-semibold text-gray-900">{crop.name}</h3>
+                      <p className="mb-3 text-sm text-gray-600">{crop.season} • {crop.daysToHarvest} days</p>
+                      
+                      <div className="space-y-3">
+                        <div>
+                          <div className="flex justify-between mb-1 text-sm">
+                            <span>Growth Progress</span>
+                            <span>{crop.growth}%</span>
+                          </div>
+                          <div className="w-full h-2 bg-gray-200 rounded-full">
+                            <div 
+                              className="h-2 transition-all duration-300 bg-green-500 rounded-full"
+                              style={{ width: `${crop.growth}%` }}
+                            ></div>
+                          </div>
+                        </div>
+                        
+                        <div>
+                          <div className="flex justify-between mb-1 text-sm">
+                            <span>Profitability</span>
+                            <span>{crop.profitability}%</span>
+                          </div>
+                          <div className="w-full h-2 bg-gray-200 rounded-full">
+                            <div 
+                              className="h-2 transition-all duration-300 bg-blue-500 rounded-full"
+                              style={{ width: `${crop.profitability}%` }}
+                            ></div>
+                          </div>
                         </div>
                       </div>
+                      
+                      <button className="w-full px-4 py-2 mt-4 text-white transition-colors bg-green-600 rounded-lg hover:bg-green-700">
+                        Plant Now
+                      </button>
                     </div>
                   </div>
                 ))}
               </div>
             </div>
           </div>
-          {/* Right column */}
-          <div>
-            {/* Soil Moisture */}
-            <div className="p-6 mb-6 bg-white rounded-lg shadow">
-              <h2 className="mb-6 text-xl font-bold text-center">Average Soil Moisture</h2>
-              
-              <div className="flex justify-center mb-4">
-                <div className="relative w-48 h-48">
-                  {/* Background circle */}
-                  <div className="absolute inset-0 border-green-100 rounded-full border-16"></div>
-                  
-                  {/* Progress circle - dynamically covers a percentage */}
-                  <div 
-                    className="absolute inset-0 border-green-600 rounded-full border-16" 
-                    style={{ 
-                      clipPath: `polygon(50% 50%, 100% 0, 100% 100%, 0 100%, 0 0)`,
-                      transform: `rotate(${farmData.soilMoisture * 1.8 - 90}deg)`
-                    }}
-                  ></div>
-                  
-                  {/* Center content */}
-                  <div className="absolute inset-0 flex items-center justify-center">
-                    <div className="text-4xl font-bold text-green-600">{farmData.soilMoisture}%</div>
+        )}
+
+        {activeTab === 'weather' && (
+          <div className="bg-white rounded-lg shadow">
+            <div className="px-6 py-4 border-b border-gray-200">
+              <h2 className="text-xl font-semibold">5-Day Weather Forecast</h2>
+              <p className="text-gray-600">Plan your farming activities accordingly</p>
+            </div>
+            <div className="p-6">
+              <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
+                {farmData.weather.map((day, index) => (
+                  <div key={index} className="p-4 text-center border border-gray-200 rounded-lg">
+                    <h3 className="font-semibold text-gray-900">{day.day}</h3>
+                    <div className="flex justify-center my-3">
+                      {getWeatherIcon(day.condition)}
+                    </div>
+                    <div className="text-2xl font-bold text-gray-900">{day.temp}°C</div>
+                    <div className="mt-2 space-y-1 text-sm text-gray-600">
+                      <div>Humidity: {day.humidity}%</div>
+                      <div>Rain: {day.precipitation}%</div>
+                    </div>
+                    <div className="mt-2">
+                      <span className="px-2 py-1 text-xs capitalize bg-gray-100 rounded-full">
+                        {day.condition.replace('-', ' ')}
+                      </span>
+                    </div>
                   </div>
-                </div>
+                ))}
               </div>
               
-              <div className="flex justify-center mb-4">
-                <div className="px-4 py-1 text-green-600 bg-white border border-green-600 rounded-full">
-                  Safe Zone
-                </div>
-              </div>
-              
-              <div className="flex items-center justify-center gap-2 mb-4">
-                <div className="flex items-center gap-1 px-3 py-2 bg-gray-100 rounded-md">
-                  <div className="w-5 h-5 bg-green-600 rounded-sm"></div>
-                  <span>{sensor}</span>
-                  <ChevronDown className="w-4 h-4 text-gray-500" />
-                </div>
-              </div>
-              
-              <div className="mt-4">
-                <div className="mb-1 text-sm text-gray-600">Potion name</div>
-                <div className="relative w-full h-3 overflow-hidden bg-gray-200 rounded-full">
-                  <div className="absolute inset-y-0 left-0 w-4/5 bg-green-600 rounded-full"></div>
-                </div>
-                <div className="flex justify-end">
-                  <div className="px-1 mt-1 text-xs text-green-800 bg-green-100 rounded">85%</div>
-                </div>
+              <div className="p-4 mt-6 rounded-lg bg-blue-50">
+                <h3 className="mb-2 font-semibold text-blue-900">Weather Recommendations</h3>
+                <ul className="space-y-1 text-sm text-blue-800">
+                  <li>• Day 3: Heavy rain expected - postpone harvesting activities</li>
+                  <li>• Days 1, 4, 5: Ideal conditions for field work and spraying</li>
+                  <li>• Consider irrigation for Day 2 if soil moisture drops below 60%</li>
+                </ul>
               </div>
             </div>
-            
-            {/* Soil Nutrients */}
-            <div className="p-6 mb-6 bg-white rounded-lg shadow">
-              <div className="flex items-center justify-between mb-6">
-                <h2 className="text-xl font-bold">Soil Nutrients</h2>
-                <div className="flex gap-2">
-                  <button 
-                    className={`px-3 py-1 text-sm rounded-md ${activeTimeframe === 'Day' ? 'bg-gray-200' : 'bg-white'}`}
-                    onClick={() => setActiveTimeframe('Day')}
-                  >
-                    Day
-                  </button>
-                  <button 
-                    className={`px-3 py-1 text-sm rounded-md ${activeTimeframe === 'Week' ? 'bg-gray-200' : 'bg-white'}`}
-                    onClick={() => setActiveTimeframe('Week')}
-                  >
-                    Week
-                  </button>
-                  <button 
-                    className={`px-3 py-1 text-sm rounded-md ${activeTimeframe === 'Month' ? 'bg-gray-200' : 'bg-white'}`}
-                    onClick={() => setActiveTimeframe('Month')}
-                  >
-                    Month
-                  </button>
-                </div>
-              </div>
-              
-              <div className="flex justify-center gap-4 mb-4">
-                <div className="flex items-center gap-1">
-                  <div className="w-3 h-3 bg-green-600 rounded-full"></div>
-                  <span className="text-sm">Nitrogen</span>
-                </div>
-                <div className="flex items-center gap-1">
-                  <div className="w-3 h-3 bg-orange-400 rounded-full"></div>
-                  <span className="text-sm">Phosphorus</span>
-                </div>
-                <div className="flex items-center gap-1">
-                  <div className="w-3 h-3 bg-red-400 rounded-full"></div>
-                  <span className="text-sm">Potassium</span>
-                </div>
-              </div>
-              
-              <div className="h-64">
-                <div className="flex h-full gap-6">
-                  {farmData.nutrients.weeks.map((week, index) => (
-                    <div key={week} className="flex flex-col items-center justify-end flex-1 gap-2">
-                      <div className="flex items-end justify-center w-full h-56 gap-2">
-                        <div 
-                          className="w-6 bg-green-500" 
-                          style={{height: `${(farmData.nutrients.nitrogen[index] / 1200) * 100}%`}}
-                        ></div>
-                        <div 
-                          className="w-6 bg-orange-400" 
-                          style={{height: `${(farmData.nutrients.phosphorus[index] / 1200) * 100}%`}}
-                        ></div>
-                        <div 
-                          className="w-6 bg-red-400" 
-                          style={{height: `${(farmData.nutrients.potassium[index] / 1200) * 100}%`}}
-                        ></div>
-                      </div>
-                      <div className="text-sm text-gray-600">{week}</div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </div>
-            
-            {/* pH Readings */}
-            <div className="p-6 mb-6 bg-white rounded-lg shadow">
-              <div className="flex items-center justify-between mb-6">
-                <h2 className="text-xl font-bold">Today's pH readings</h2>
-                <div className="flex items-center gap-2 px-3 py-1 text-gray-600 border border-gray-300 rounded-md">
-                  <span>September 11, 2024</span>
-                  <ChevronDown className="w-4 h-4" />
-                  <Calendar className="w-4 h-4 text-green-600" />
-                </div>
-              </div>
-              
-              <div className="relative mb-2 h-36">
-                {/* pH scale */}
-                <div className="absolute bottom-0 left-0 right-0 flex justify-between">
-                  {[...Array(15)].map((_, i) => (
-                    <div key={i} className="flex flex-col items-center">
-                      <div className="h-12 border-l border-gray-200"></div>
-                      <div className="mt-1 text-xs text-gray-500">{i+1}</div>
-                    </div>
-                  ))}
-                </div>
-                
-                {/* Current pH marker */}
-                <div 
-                  className="absolute bottom-12"
-                  style={{left: `${((farmData.phReading - 1) / 14) * 100}%`}}
-                >
-                  <div className="h-24 border-l-2 border-green-600"></div>
-                </div>
-                
-                {/* pH reading value */}
-                <div
-                  className="absolute bottom-1/2"
-                  style={{right: `${(15 - farmData.phReading) / 14 * 100}%`}}
-                >
-                  <div className="w-6 h-6 bg-indigo-800 rounded-full"></div>
-                </div>
-              </div>
-              
-              <div className="flex justify-center gap-8">
-                <div className="flex items-center gap-2">
-                  <div className="w-4 h-4 bg-red-500"></div>
-                  <span className="text-sm">acidic</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <div className="w-4 h-4 bg-green-400"></div>
-                  <span className="text-sm">neutral</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <div className="w-4 h-4 bg-blue-800"></div>
-                  <span className="text-sm">alkaline</span>
-                </div>
-              </div>
-            </div>
-            
-           
           </div>
-        </div>
+        )}
+
+        {activeTab === 'analytics' && (
+          <div className="space-y-6">
+            <div className="grid gap-6 sm:grid-cols-2">
+              <div className="p-6 bg-white rounded-lg shadow">
+                <h3 className="mb-4 text-lg font-semibold">Crop Distribution</h3>
+                <div className="space-y-3">
+                  {Array.from(new Set(farmData.farms.map(f => f.cropType))).map(crop => {
+                    const count = farmData.farms.filter(f => f.cropType === crop).length;
+                    const percentage = (count / farmData.farms.length) * 100;
+                    return (
+                      <div key={crop}>
+                        <div className="flex justify-between mb-1 text-sm">
+                          <span>{crop}</span>
+                          <span>{count} farms ({percentage.toFixed(0)}%)</span>
+                        </div>
+                        <div className="w-full h-3 bg-gray-200 rounded-full">
+                          <div 
+                            className="h-3 bg-green-500 rounded-full"
+                            style={{ width: `${percentage}%` }}
+                          ></div>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+              
+              <div className="p-6 bg-white rounded-lg shadow">
+                <h3 className="mb-4 text-lg font-semibold">Farm Health Overview</h3>
+                <div className="space-y-3">
+                  {['excellent', 'good', 'fair', 'poor'].map(health => {
+                    const count = farmData.farms.filter(f => f.health === health).length;
+                    const percentage = (count / farmData.farms.length) * 100;
+                    return (
+                      <div key={health} className="flex items-center justify-between">
+                        <div className="flex items-center gap-2">
+                          {getHealthIcon(health)}
+                          <span className="capitalize">{health}</span>
+                        </div>
+                        <span className="font-semibold">{count} farms</span>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+            </div>
+            
+            <div className="p-6 bg-white rounded-lg shadow">
+              <h3 className="mb-4 text-lg font-semibold">Upcoming Harvests</h3>
+              <div className="overflow-x-auto">
+                <table className="w-full text-sm">
+                  <thead>
+                    <tr className="border-b">
+                      <th className="py-2 text-left">Farm</th>
+                      <th className="py-2 text-left">Crop</th>
+                      <th className="py-2 text-left">Harvest Date</th>
+                      <th className="py-2 text-left">Days Left</th>
+                      <th className="py-2 text-left">Status</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {farmData.farms
+                      .sort((a, b) => new Date(a.harvestDate).getTime() - new Date(b.harvestDate).getTime())
+                      .map(farm => {
+                        const daysLeft = Math.ceil((new Date(farm.harvestDate).getTime() - new Date().getTime()) / (1000 * 60 * 60 * 24));
+                        return (
+                          <tr key={farm.id} className="border-b hover:bg-gray-50">
+                            <td className="py-2 font-medium">{farm.name}</td>
+                            <td className="py-2">{farm.cropType}</td>
+                            <td className="py-2">{new Date(farm.harvestDate).toLocaleDateString()}</td>
+                            <td className="py-2">
+                              <span className={`px-2 py-1 rounded-full text-xs ${
+                                daysLeft <= 7 ? 'bg-red-100 text-red-700' :
+                                daysLeft <= 14 ? 'bg-yellow-100 text-yellow-700' :
+                                'bg-green-100 text-green-700'
+                              }`}>
+                                {daysLeft} days
+                              </span>
+                            </td>
+                            <td className="py-2">
+                              <div className="flex items-center gap-2">
+                                {getHealthIcon(farm.health)}
+                                <span className="capitalize">{farm.health}</span>
+                              </div>
+                            </td>
+                          </tr>
+                        );
+                      })}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
     </div>
-  );
+  )
 }

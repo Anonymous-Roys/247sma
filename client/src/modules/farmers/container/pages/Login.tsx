@@ -4,6 +4,7 @@ import axios from 'axios';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { useNavigate } from 'react-router-dom';
+import { BASE_URL } from '@/shared/lib/utils';
 
 const Login = () => {
   const [email, setEmail] = useState('');
@@ -17,7 +18,7 @@ const Login = () => {
     setIsLoading(true);
 
     try {
-      const response = await axios.post('https://two47sma.onrender.com/api/login', { email, password });
+      const response = await axios.post(`${BASE_URL}/api/login`, { email, password });
       const token = response.data.token;
       toast.success('Login successful!');
 

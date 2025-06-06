@@ -5,6 +5,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import { useNavigate } from 'react-router-dom';
 import validator from 'validator';
 import { User, Mail, Phone, Lock, Eye, EyeOff, Key, ArrowLeft } from 'lucide-react';
+import { BASE_URL } from '@/shared/lib/utils';
 
 const SignUp = () => {
   const [step, setStep] = useState<1 | 2>(1);
@@ -69,7 +70,7 @@ const SignUp = () => {
 
     setIsLoading(true);
     try {
-      await axios.post('https://two47sma.onrender.com/api/send-otp', { 
+      await axios.post(`${BASE_URL}/api/send-otp`, { 
         emailOrPhone: formData.emailOrPhone 
       });
       setStep(2);
@@ -90,7 +91,7 @@ const SignUp = () => {
 
     setIsLoading(true);
     try {
-      await axios.post('https://two47sma.onrender.com/api/verify-otp', { 
+      await axios.post(`${BASE_URL}/api/verify-otp`, { 
         emailOrPhone: formData.emailOrPhone,
         password: formData.password,
         name: formData.name,

@@ -2,7 +2,8 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import ProductForm from '../../components/product/ProductForm';
+import ProductForm from '../../../components/product/ProductForm';
+import { BASE_URL } from '@/shared/lib/utils';
 
 export default function EditProductPage() {
   const { id } = useParams();
@@ -17,7 +18,7 @@ export default function EditProductPage() {
       try {
         const token = sessionStorage.getItem('token');
         const response = await axios.get(
-          `https://two47sma.onrender.com/api/products/${id}`,
+          `${BASE_URL}/api/products/${id}`,
           {
             headers: {
               Authorization: `Bearer ${token}`,
@@ -39,7 +40,7 @@ export default function EditProductPage() {
     try {
       const token = sessionStorage.getItem('token');
       const response = await axios.put(
-        `https://two47sma.onrender.com/api/products/${id}`,
+        `${BASE_URL}/api/products/${id}`,
         productData,
         {
           headers: {
@@ -80,7 +81,7 @@ export default function EditProductPage() {
   }
 
   return (
-    <div className="p-6">
+   <div className="p-6 mb-8 bg-white rounded-lg shadow">
       <h1 className="mb-6 text-2xl font-bold">Edit Product</h1>
       
       {success && (
@@ -92,7 +93,7 @@ export default function EditProductPage() {
       {product && (
         <ProductForm
           onSubmit={handleSubmit}
-          onCancel={() => navigate('/products')}
+          onCancel={() => navigate('/farmers/products')}
           initialValues={{
             name: product.name,
             description: product.description,

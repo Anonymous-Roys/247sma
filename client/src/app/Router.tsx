@@ -2,28 +2,31 @@ import { Suspense } from "react";
 import { createBrowserRouter, RouterProvider, Navigate } from "react-router-dom"; // Import Navigate
 import FarmersLayout from "./Layout"; // Layout component for farmers
 import ErrorBoundary from "@/modules/farmers/container/ErrorBoundary";
-import Overview from "@/modules/farmers/container/pages/Overview";
-import Profile from "@/modules/farmers/container/pages/Profile";
-import Products from "@/modules/farmers/container/pages/Products";
-import Orders from "@/modules/farmers/container/pages/Orders";
-import Farms from "@/modules/farmers/container/pages/Farms";
-import Investments from "@/modules/farmers/container/pages/Investments";
-import FarmNotifications from "@/modules/farmers/container/pages/Notification";
-import CampaignDetail from "@/modules/farmers/container/pages/CampaignDetail";
-import ProductDetailPage from "@/modules/farmers/container/pages/ProductDetailPage";
+import Overview from "@/modules/farmers/container/pages/marketplace/Overview";
+import Profile from "@/modules/farmers/container/pages/marketplace/Profile";
+import Products from "@/modules/farmers/container/pages/marketplace/Products";
+import Orders from "@/modules/farmers/container/pages/marketplace/Orders";
+import Farms from "@/modules/farmers/container/pages/marketplace/Farms";
+import Investments from "@/modules/farmers/container/pages/marketplace/Investments";
+import FarmNotifications from "@/modules/farmers/container/pages/marketplace/Notification";
+import CampaignDetail from "@/modules/farmers/container/pages/marketplace/CampaignDetail";
+import ProductDetailPage from "@/modules/farmers/container/pages/marketplace/ProductDetailPage";
 import CropAnalytics from "@/modules/farmers/container/pages/farmForMe/CropAnalytics";
 import SoilAnalytics from "@/modules/farmers/container/pages/farmForMe/SoilAnalytics";
 import ScarecrowDashboard from "@/modules/farmers/container/pages/farmForMe/Scarescrow";
 import AMAnalytics from "@/modules/farmers/container/pages/farmForMe/AMAnalytics";
 import ClimateDashboard from "@/modules/farmers/container/pages/farmForMe/Climate";
-import FarmMarketplace from "@/modules/farmers/container/pages/FarmMarketplace";
+import FarmMarketplace from "@/modules/farmers/container/pages/marketplace/FarmMarketplace";
 
 import SignUp from "@/modules/farmers/container/pages/SignUp";
 import Login from "@/modules/farmers/container/pages/Login";
 import ProtectedRoute from "@/modules/farmers/components/auth/ProtectedRoute";
 import NotFound from "@/modules/farmers/container/pages/NotFound";
-import EditProductPage from "@/modules/farmers/container/pages/EditProductPage";
+import EditProductPage from "@/modules/farmers/container/pages/marketplace/EditProductPage";
+import { QueryClient, QueryClientProvider } from 'react-query';
 
+
+const queryClient = new QueryClient();
 function Router() {
   const router = createBrowserRouter([
     {
@@ -64,8 +67,15 @@ function Router() {
         { path: "investments", element: <Investments /> },
         { path: "campaign-detail", element: <CampaignDetail /> },
         { path: "notification", element: <FarmNotifications /> },
-        { path: "marketplace", element: <FarmMarketplace /> },
-        { path: "marketplace/product/:slug", element: <ProductDetailPage /> },
+        { 
+          path: "marketplace", 
+          element: (
+
+          <QueryClientProvider client={queryClient}>
+      <FarmMarketplace />
+    </QueryClientProvider>
+        ) },
+        { path: "marketplace/product/:_id", element: <ProductDetailPage /> },
         { path: "crop-analytics", element: <CropAnalytics /> },
         { path: "soil-analytics", element: <SoilAnalytics /> },
         { path: "scarecrow", element: <ScarecrowDashboard /> },

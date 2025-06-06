@@ -14,10 +14,8 @@ router.get('/:id', async (req, res) => {
   res.json(product);
 });
 
-router.get('/', async (req, res) => {
-  const products = await productService.getAllProducts();
-  res.json(products);
-});
+router.route('/')
+  .get(productService.getAllProducts);
 
 router.put('/:id', authMiddleware, async (req, res) => {
   const product = await productService.updateProduct(req.params.id, req.body, req.user);

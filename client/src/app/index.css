@@ -32,7 +32,7 @@ h1 {
   line-height: 1.1;
 }
 
-input, select{
+input, select, textarea{
   background: #ffffff00;
 }
 

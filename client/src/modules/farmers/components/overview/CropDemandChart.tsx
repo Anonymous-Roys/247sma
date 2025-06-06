@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { MoreVertical } from 'lucide-react';
+// import { MoreVertical } from 'lucide-react';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 
 const CropDemandChart = () => {
@@ -58,9 +58,9 @@ const CropDemandChart = () => {
           >
             {isRealData ? 'Using Real Data' : 'Using Demo Data'}
           </button>
-          <button aria-label="View more options" className="p-1 rounded-full hover:bg-gray-100">
+          {/* <button aria-label="View more options" className="p-1 rounded-full hover:bg-gray-100">
             <MoreVertical className="w-5 h-5 text-gray-500" />
-          </button>
+          </button> */}
         </div>
       </div>
       

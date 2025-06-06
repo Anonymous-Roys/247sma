@@ -8,16 +8,18 @@ const authRoutes = require('./routes/auth');
 // const orderRoutes = require('./routes/orderRoutes');
 
 const app = express();
-
+app.use(express.json({ limit: '10mb' }));
+app.use(express.urlencoded({ limit: '10mb', extended: true }));
 // Middleware
-app.use(bodyParser.json());
+app.use(bodyParser.json({ limit: '20mb' })); // or '20mb', adjust as needed
+app.use(bodyParser.urlencoded({ limit: '10mb', extended: true }));
 app.use(cors());
 
 // Routes
 app.use('/api', authRoutes);
 app.use('/api/products', require('./routes/product'));
 // app.use('/api/orders', orderRoutes);
-
+console.log(process.env.MONGODB_URI)
 // Database connection
 mongoose.connect(process.env.MONGODB_URI)
   .then(() => console.log('Connected to MongoDB'))

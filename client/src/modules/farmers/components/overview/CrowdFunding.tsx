@@ -95,9 +95,9 @@ const CrowdfundingProjects = () => {
           >
             {isRealData ? 'Live Data' : 'Demo Data'}
           </button>
-          <button aria-label="More options" className="p-1 rounded-full hover:bg-gray-100">
+          {/* <button aria-label="More options" className="p-1 rounded-full hover:bg-gray-100">
             <MoreVertical className="w-5 h-5 text-gray-500" />
-          </button>
+          </button> */}
         </div>
       </div>
 

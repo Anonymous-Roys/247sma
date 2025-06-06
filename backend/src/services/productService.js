@@ -57,8 +57,62 @@ exports.getProduct = async (productId) => {
   return Product.findById(productId);
 };
 
-exports.getAllProducts = async () => {
-  return Product.find({});
+// Updated controller with pagination
+exports.getAllProducts = async (req, res) => {
+  try {
+    const { page = 1, limit = 10, ...filters } = req.query;
+    
+    // Build query
+    const query = {};
+    
+    // Add filters
+    if (filters.category) {
+      query.categories = filters.category;
+    }
+    
+    if (filters.featured) {
+      query.featured = filters.featured === 'true';
+    }
+    
+    if (filters.status) {
+      query.status = filters.status;
+    }
+    
+    if (filters.minPrice || filters.maxPrice) {
+      query['variants.price'] = {};
+      if (filters.minPrice) {
+        query['variants.price'].$gte = Number(filters.minPrice);
+      }
+      if (filters.maxPrice) {
+        query['variants.price'].$lte = Number(filters.maxPrice);
+      }
+    }
+    
+    // Execute query with pagination
+    const products = await Product.find(query)
+      .limit(Number(limit))
+      .skip((Number(page) - 1) * Number(limit))
+      .sort(filters.sort || '-createdAt');
+    
+    // Get total count for pagination info
+    const total = await Product.countDocuments(query);
+    
+    res.status(200).json({
+      success: true,
+      count: products.length,
+      total,
+      page: Number(page),
+      pages: Math.ceil(total / Number(limit)),
+      data: products
+    });
+    
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({
+      success: false,
+      error: 'Server Error'
+    });
+  }
 };
 
 // In your product controller file

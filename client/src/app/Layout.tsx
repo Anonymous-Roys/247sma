@@ -4,6 +4,7 @@ import { AppSidebar } from "@/shared/components/custom/app-sidebar";
 import { SidebarProvider, SidebarTrigger } from "@/shared/components/ui/sidebar";
 import { Outlet } from "react-router-dom";
 import { BASE_URL } from "@/shared/lib/utils";
+import { useNavigate } from "react-router-dom";
 
 
 export type User = {
@@ -14,6 +15,7 @@ export type User = {
 };
 export default function FarmersLayout() {
   const [user, setUser] = useState<User | null>(null);
+  const navigate = useNavigate()
   function getInitials(name: string): string {
     if (!name) return "U";
     const parts = name.trim().split(" ");
@@ -26,6 +28,7 @@ export default function FarmersLayout() {
 
       if (!token) {
         console.warn("No token found in sessionStorage.");
+        navigate("/login")
         return;
       }
 
