@@ -1,5 +1,5 @@
 'use client'
-import React, {useEffect, useState } from 'react';
+import {useEffect, useState } from 'react';
 import { ChevronDown, ChevronUp, ArrowLeft, Star, Heart, Facebook, Twitter, Share2, HomeIcon } from 'lucide-react';
 import { Product, ProductImage } from '@/shared/types/product';
 import { Link } from 'react-router-dom';
