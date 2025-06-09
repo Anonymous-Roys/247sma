@@ -1,16 +1,5 @@
-import React, { useState } from 'react';
-import { ArrowUpRight} from 'lucide-react';
-import {
-  LineChart,
-  Line,
-  
-  XAxis,
-  YAxis,
-  CartesianGrid,
-  Tooltip,
-  ResponsiveContainer,
- 
-} from 'recharts';
+import React from 'react';
+
 import { useNavigate } from 'react-router-dom';
 import CrowdfundingProjects from '../../../components/overview/CrowdFunding';
 import CropDemandChart from '../../../components/overview/CropDemandChart';
@@ -22,21 +11,8 @@ import InvestmentCard from '@/modules/farmers/components/overview/InvestmentCard
 
 
 const FarmDashboard: React.FC = () => {
-  const [timeRange, setTimeRange] = useState<'Daily' | 'Weekly' | 'Monthly'>('Daily');
   const navigate = useNavigate();
-  // Investment chart data
-  const investmentData = [
-    { quarter: 'Q1', value: 0, secondValue: 0 },
-    { quarter: 'Q2', value: 0, secondValue: 0 },
-    { quarter: 'Q2.5', value: 0, secondValue: 0 },
-    { quarter: 'Q3', value: 0, secondValue: 0 },
-    { quarter: 'Q3.5', value: 0, secondValue: 0 },
-    { quarter: 'Q4', value: 0, secondValue: 0 },
-    { quarter: 'Q4.5', value: 0, secondValue: 0 },
-    { quarter: 'Q5', value: 0, secondValue: 0 },
-    { quarter: 'Q5.5', value: 0, secondValue: 0 },
-  ];
-
+ 
   
   return (
     <div className="p-4 mx-auto max-w-7xl">

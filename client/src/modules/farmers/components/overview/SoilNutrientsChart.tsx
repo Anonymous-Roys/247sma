@@ -38,7 +38,7 @@ const SoilNutrientsChart = () => {
               onClick={() => setIsRealData(true)}
               className="ml-3 text-sm font-medium text-blue-600 hover:text-blue-800"
             >
-              Use real data
+              Continue To View
             </button>
           </div>
         </div>
@@ -51,7 +51,7 @@ const SoilNutrientsChart = () => {
           onClick={() => setIsRealData(!isRealData)}
           className={`text-xs px-2 py-1 rounded ${isRealData ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'}`}
         >
-          {isRealData ? 'Real Data' : 'Demo Data'}
+          {isRealData ? 'Simulating Real Data' : 'Demo Data'}
         </button>
       </div>
 

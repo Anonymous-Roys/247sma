@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Search, Thermometer, Maximize, MapPin, Plus, Minus, Eye, EyeOff, Settings, Calendar, TrendingUp, Droplets, Sun, Cloud, AlertTriangle, CheckCircle, Clock, BarChart3, Users, Truck, Wrench } from 'lucide-react';
+import { Search, Thermometer, Maximize, MapPin, Plus, Minus, Eye, EyeOff, TrendingUp, Droplets, Sun, Cloud, AlertTriangle, CheckCircle, BarChart3, Users, Truck, Wrench } from 'lucide-react';
 
 interface Farm {
   id: string;
@@ -74,6 +74,7 @@ const mockFarmData: FarmData = {
 
 export default function SoilAnalytics() {
   const [search, setSearch] = useState('');
+  const [isRealData, setIsRealData] = useState(false);
   const [selectedFarm, setSelectedFarm] = useState<Farm | null>(null);
   const [zoomLevel, setZoomLevel] = useState(1);
   const [showLabels, setShowLabels] = useState(true);
@@ -127,14 +128,32 @@ export default function SoilAnalytics() {
 
   return (
     <div className="min-h-screen p-4 bg-gray-50">
+       {!isRealData && (
+        <div className="absolute inset-0 flex items-center justify-center backdrop-blur-[1px] z-10">
+          <div className="flex items-center p-3 border border-gray-200 rounded-lg shadow-sm bg-white/90">
+            <span className="px-2 py-1 mr-2 text-xs text-yellow-800 bg-yellow-100 rounded">
+              DEMO
+            </span>
+            <p className="text-sm text-gray-700">
+              Showing sample data
+            </p>
+            <button 
+              onClick={() => setIsRealData(true)}
+              className="ml-3 text-sm font-medium text-blue-600 hover:text-blue-800"
+            >
+              Continue to View
+            </button>
+          </div>
+        </div>
+      )}
       <div className="mx-auto max-w-7xl">
         {/* Header */}
         <div className="flex flex-col gap-4 mb-6 sm:flex-row sm:justify-between sm:items-center">
           <div>
-            <h3 className="text-2xl font-bold text-gray-900 sm:text-3xl">Soil Analytics</h3>
-            <p className="text-gray-600">{currentTime.toLocaleDateString()} • {currentTime.toLocaleTimeString()}</p>
+            <h3 className="font-bold text-gray-900 ">Soil Analytics</h3>
+            <p className="text-sm text-gray-600">{currentTime.toLocaleDateString()} • {currentTime.toLocaleTimeString()}</p>
           </div>
-          <div className="flex gap-2">
+          {/* <div className="flex gap-2">
             <button className="flex items-center px-4 py-2 text-white bg-green-600 rounded-lg hover:bg-green-700">
               <Plus className="w-4 h-4 mr-2" />
               Add Farm
@@ -143,7 +162,7 @@ export default function SoilAnalytics() {
               <Settings className="w-4 h-4 mr-2" />
               Settings
             </button>
-          </div>
+          </div> */}
         </div>
 
         {/* Quick Stats */}
@@ -498,7 +517,7 @@ export default function SoilAnalytics() {
                 <div className="space-y-3">
                   {['excellent', 'good', 'fair', 'poor'].map(health => {
                     const count = farmData.farms.filter(f => f.health === health).length;
-                    const percentage = (count / farmData.farms.length) * 100;
+                    // const percentage = (count / farmData.farms.length) * 100;
                     return (
                       <div key={health} className="flex items-center justify-between">
                         <div className="flex items-center gap-2">

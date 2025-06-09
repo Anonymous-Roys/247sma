@@ -6,4 +6,4 @@ export function cn(...inputs: ClassValue[]) {
 }
 
 
-export const BASE_URL = 'https://two47sma.onrender.com'
+export const BASE_URL = 'http://localhost:10000'

@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { ChevronRight, ArrowRight, ChevronDown, TrendingUp, TrendingDown, Eye, EyeOff, Menu, X, Bell, Search, Settings } from 'lucide-react';
+import { ChevronRight, ArrowRight, ChevronDown, TrendingUp, Eye, EyeOff, Menu, X, Settings } from 'lucide-react';
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, LineChart, Line } from 'recharts';
 
 // Mock data for the chart
@@ -60,12 +60,13 @@ export default function AMAnalytics() {
   const [timeInForce, setTimeInForce] = useState('Day');
   const [stopPrice, setStopPrice] = useState(true);
   const [quantity, setQuantity] = useState('');
+  const [isRealData, setIsRealData] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [showOrderTypeDropdown, setShowOrderTypeDropdown] = useState(false);
   const [showTimeForceDropdown, setShowTimeForceDropdown] = useState(false);
   const [tradingMode, setTradingMode] = useState('Buy');
   const [balanceVisible, setBalanceVisible] = useState(true);
-  const [selectedStock, setSelectedStock] = useState('MSFT');
+  const [selectedStock] = useState('MSFT');
   const [stopPriceValue, setStopPriceValue] = useState('400.00');
 
   // Simulate real-time updates
@@ -87,8 +88,27 @@ export default function AMAnalytics() {
     return (qty * price + fees).toLocaleString();
   };
 
+
   return (
     <div className="relative min-h-screen bg-gradient-to-br from-gray-50 to-gray-100">
+      {!isRealData && (
+        <div className="absolute inset-0 flex items-center justify-center backdrop-blur-[1px] z-10">
+          <div className="flex items-center p-3 border border-gray-200 rounded-lg shadow-sm bg-white/90">
+            <span className="px-2 py-1 mr-2 text-xs text-yellow-800 bg-yellow-100 rounded">
+              DEMO
+            </span>
+            <p className="text-sm text-gray-700">
+              Showing sample data
+            </p>
+            <button
+              onClick={() => setIsRealData(true)}
+              className="ml-3 text-sm font-medium text-blue-600 hover:text-blue-800"
+            >
+              Continue to View
+            </button>
+          </div>
+        </div>
+      )}
       {/* Overlay for dummy data indication */}
       <div className="fixed inset-0 z-50 pointer-events-none">
         <div className="absolute z-50 transform -translate-x-1/2 top-4 left-1/2">
@@ -106,7 +126,7 @@ export default function AMAnalytics() {
         <div className="px-4 py-4 mx-auto max-w-7xl sm:px-6 lg:px-8">
           <div className="flex items-center justify-between">
             <div className="flex items-center">
-              <button 
+              <button
                 className="p-2 mr-3 transition-colors rounded-lg lg:hidden hover:bg-gray-100"
                 onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
               >
@@ -120,23 +140,9 @@ export default function AMAnalytics() {
                 <h2 className="hidden text-lg font-medium text-gray-700 sm:block">Advanced Market Analysis</h2>
               </div>
             </div>
-            
+
             <div className="flex items-center space-x-3">
-              <div className="items-center hidden px-3 py-2 bg-white border border-gray-200 rounded-lg shadow-sm md:flex">
-                <Search className="w-4 h-4 mr-2 text-gray-400" />
-                <input 
-                  type="text" 
-                  placeholder="Search stocks..." 
-                  className="w-32 text-sm outline-none lg:w-48"
-                />
-              </div>
-              <button className="relative p-2 transition-colors rounded-lg hover:bg-gray-100">
-                <Bell className="w-5 h-5 text-gray-600" />
-                <div className="absolute w-3 h-3 bg-red-500 rounded-full -top-1 -right-1"></div>
-              </button>
-              <button className="p-2 transition-colors rounded-lg hover:bg-gray-100">
-                <Settings className="w-5 h-5 text-gray-600" />
-              </button>
+              
             </div>
           </div>
         </div>
@@ -162,7 +168,7 @@ export default function AMAnalytics() {
         </div>
       )}
 
-      <main className="px-4 py-6 mx-auto max-w-7xl sm:px-6 lg:px-8">
+      <main className="max-w-5xl px-4 py-6 mx-auto sm:px-6 lg:px-8">
         {/* Stock Cards Carousel */}
         <div className="mb-8">
           <div className="flex items-center justify-between mb-4">
@@ -172,7 +178,7 @@ export default function AMAnalytics() {
               <span>Live Market Data</span>
             </div>
           </div>
-          
+
           <div className="flex pb-4 space-x-4 overflow-x-auto scrollbar-hide">
             {stockCards.map((stock, index) => (
               <div key={index} className="min-w-[280px] bg-white/70 backdrop-blur-sm rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 p-5 border border-white/50 hover:scale-105">
@@ -191,17 +197,17 @@ export default function AMAnalytics() {
                   </div>
                   <div className="w-16 h-10">
                     <LineChart width={64} height={40} data={chartData.slice(-6)}>
-                      <Line 
-                        type="monotone" 
-                        dataKey="value" 
-                        stroke="#22c55e" 
+                      <Line
+                        type="monotone"
+                        dataKey="value"
+                        stroke="#22c55e"
                         strokeWidth={2}
                         dot={false}
                       />
                     </LineChart>
                   </div>
                 </div>
-                
+
                 <div className="space-y-3">
                   <div className="flex items-center justify-between">
                     <span className="text-xs text-gray-600">Current Price</span>
@@ -219,7 +225,7 @@ export default function AMAnalytics() {
                     <span className="text-sm font-bold text-gray-800">{stock.value}</span>
                   </div>
                 </div>
-                
+
                 <button className="w-full py-2 mt-4 text-sm font-medium text-white transition-all duration-200 rounded-lg bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800">
                   Trade {stock.symbol}
                 </button>
@@ -228,9 +234,9 @@ export default function AMAnalytics() {
           </div>
         </div>
 
-        <div className="grid grid-cols-1 gap-6 xl:grid-cols-12">
+        <div className="flex flex-col w-full gap-4">
           {/* Chart Section */}
-          <div className="xl:col-span-7">
+          <div className="">
             <div className="overflow-hidden border shadow-lg bg-white/70 backdrop-blur-sm rounded-xl border-white/50">
               <div className="p-6">
                 {/* Header */}
@@ -244,11 +250,10 @@ export default function AMAnalytics() {
                       <button
                         key={time}
                         onClick={() => setTimeframe(time)}
-                        className={`px-4 py-2 text-sm rounded-lg font-medium transition-all duration-200 ${
-                          timeframe === time
+                        className={`px-4 py-2 text-sm rounded-lg font-medium transition-all duration-200 ${timeframe === time
                             ? 'bg-gradient-to-r from-green-600 to-green-700 text-white shadow-lg'
                             : 'text-gray-600 hover:bg-gray-100 bg-white/50'
-                        }`}
+                          }`}
                       >
                         {time}
                       </button>
@@ -270,26 +275,26 @@ export default function AMAnalytics() {
                         </linearGradient>
                       </defs>
                       <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f0f0f0" />
-                      <XAxis 
-                        dataKey="time" 
-                        axisLine={false} 
+                      <XAxis
+                        dataKey="time"
+                        axisLine={false}
                         tickLine={false}
                         tick={{ fontSize: 12, fill: '#6b7280' }}
                       />
-                      <YAxis 
+                      <YAxis
                         domain={[0, 'dataMax + 2000']}
                         axisLine={false}
                         tickLine={false}
                         tick={{ fontSize: 12, fill: '#6b7280' }}
-                        tickFormatter={(value) => `$${(value/1000).toFixed(0)}k`}
+                        tickFormatter={(value) => `$${(value / 1000).toFixed(0)}k`}
                       />
                       <Tooltip content={<CustomTooltip />} />
-                      <Area 
-                        type="monotone" 
-                        dataKey="value" 
-                        stroke="#16a34a" 
-                        fillOpacity={1} 
-                        fill="url(#colorValue)" 
+                      <Area
+                        type="monotone"
+                        dataKey="value"
+                        stroke="#16a34a"
+                        fillOpacity={1}
+                        fill="url(#colorValue)"
                         strokeWidth={3}
                       />
                     </AreaChart>
@@ -300,20 +305,20 @@ export default function AMAnalytics() {
           </div>
 
           {/* Right Column */}
-          <div className="flex flex-col gap-6 xl:col-span-5">
+          <div className="flex flex-col">
             {/* Balance Section */}
             <div className="border shadow-lg bg-white/70 backdrop-blur-sm rounded-xl border-white/50">
               <div className="p-6">
                 <div className="flex items-center justify-between mb-4">
                   <h3 className="text-lg font-semibold text-gray-800">Portfolio Balance</h3>
-                  <button 
+                  <button
                     onClick={() => setBalanceVisible(!balanceVisible)}
                     className="p-2 transition-colors rounded-lg hover:bg-gray-100"
                   >
                     {balanceVisible ? <Eye className="w-4 h-4" /> : <EyeOff className="w-4 h-4" />}
                   </button>
                 </div>
-                
+
                 <div className="p-6 mb-4 text-white bg-gradient-to-r from-green-600 to-green-700 rounded-xl">
                   <div className="flex items-center justify-between">
                     <div>
@@ -331,7 +336,7 @@ export default function AMAnalytics() {
                     </div>
                   </div>
                 </div>
-                
+
                 <div className="grid grid-cols-2 gap-4">
                   <div className="p-4 rounded-lg bg-gray-50">
                     <p className="mb-1 text-sm text-gray-600">Invested</p>
@@ -346,7 +351,7 @@ export default function AMAnalytics() {
                     </p>
                   </div>
                 </div>
-                
+
                 <div className="p-4 mt-4 border border-blue-100 rounded-lg bg-gradient-to-r from-blue-50 to-green-50">
                   <div className="flex items-center justify-between">
                     <div>
@@ -358,10 +363,10 @@ export default function AMAnalytics() {
                     </div>
                     <div className="w-16 h-8">
                       <LineChart width={64} height={32} data={chartData.slice(-4)}>
-                        <Line 
-                          type="monotone" 
-                          dataKey="value" 
-                          stroke="#22c55e" 
+                        <Line
+                          type="monotone"
+                          dataKey="value"
+                          stroke="#22c55e"
                           strokeWidth={2}
                           dot={false}
                         />
@@ -371,36 +376,34 @@ export default function AMAnalytics() {
                 </div>
               </div>
             </div>
-            
+
             {/* Enhanced Trade Form */}
             <div className="border shadow-lg bg-white/70 backdrop-blur-sm rounded-xl border-white/50">
               <div className="p-6">
                 <h3 className="mb-4 text-lg font-semibold text-gray-800">Quick Trade</h3>
-                
+
                 {/* Buy/Sell Toggle */}
                 <div className="grid grid-cols-2 gap-2 mb-6">
-                  <button 
+                  <button
                     onClick={() => setTradingMode('Buy')}
-                    className={`px-4 py-3 font-semibold rounded-lg transition-all duration-200 ${
-                      tradingMode === 'Buy' 
-                        ? 'bg-gradient-to-r from-green-600 to-green-700 text-white shadow-lg' 
+                    className={`px-4 py-3 font-semibold rounded-lg transition-all duration-200 ${tradingMode === 'Buy'
+                        ? 'bg-gradient-to-r from-green-600 to-green-700 text-white shadow-lg'
                         : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-                    }`}
+                      }`}
                   >
                     Buy
                   </button>
-                  <button 
+                  <button
                     onClick={() => setTradingMode('Sell')}
-                    className={`px-4 py-3 font-semibold rounded-lg transition-all duration-200 ${
-                      tradingMode === 'Sell' 
-                        ? 'bg-gradient-to-r from-red-600 to-red-700 text-white shadow-lg' 
+                    className={`px-4 py-3 font-semibold rounded-lg transition-all duration-200 ${tradingMode === 'Sell'
+                        ? 'bg-gradient-to-r from-red-600 to-red-700 text-white shadow-lg'
                         : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-                    }`}
+                      }`}
                   >
                     Sell
                   </button>
                 </div>
-                
+
                 {/* Order Type Dropdown */}
                 <div className="mb-4">
                   <label className="block mb-2 text-sm font-medium text-gray-700">Order Type</label>
@@ -430,7 +433,7 @@ export default function AMAnalytics() {
                     )}
                   </div>
                 </div>
-                
+
                 {/* Quantity Input */}
                 <div className="mb-4">
                   <label className="block mb-2 text-sm font-medium text-gray-700">Quantity</label>
@@ -458,7 +461,7 @@ export default function AMAnalytics() {
                     ))}
                   </div>
                 </div>
-                
+
                 {/* Time-in-Force Dropdown */}
                 <div className="mb-4">
                   <label className="block mb-2 text-sm font-medium text-gray-700">Time-in-Force</label>
@@ -488,24 +491,22 @@ export default function AMAnalytics() {
                     )}
                   </div>
                 </div>
-                
+
                 {/* Stop Price Toggle */}
                 <div className="flex items-center justify-between mb-4">
                   <span className="text-sm font-medium text-gray-700">Stop Price</span>
-                  <div 
-                    className={`relative w-12 h-6 rounded-full cursor-pointer transition-colors ${
-                      stopPrice ? 'bg-green-600' : 'bg-gray-300'
-                    }`}
+                  <div
+                    className={`relative w-12 h-6 rounded-full cursor-pointer transition-colors ${stopPrice ? 'bg-green-600' : 'bg-gray-300'
+                      }`}
                     onClick={() => setStopPrice(!stopPrice)}
                   >
-                    <div 
-                      className={`absolute top-1 left-1 w-4 h-4 bg-white rounded-full shadow transform transition-transform ${
-                        stopPrice ? 'translate-x-6' : 'translate-x-0'
-                      }`}
+                    <div
+                      className={`absolute top-1 left-1 w-4 h-4 bg-white rounded-full shadow transform transition-transform ${stopPrice ? 'translate-x-6' : 'translate-x-0'
+                        }`}
                     ></div>
                   </div>
                 </div>
-                
+
                 {/* Stop Price Input */}
                 {stopPrice && (
                   <div className="mb-4">
@@ -525,7 +526,7 @@ export default function AMAnalytics() {
                     </div>
                   </div>
                 )}
-                
+
                 {/* Summary */}
                 <div className="pt-4 mt-4 space-y-2 border-t border-gray-200">
                   <div className="flex justify-between text-sm">
@@ -541,18 +542,17 @@ export default function AMAnalytics() {
                     <span className="text-gray-800">${calculateEstimatedTotal()}</span>
                   </div>
                 </div>
-                
+
                 {/* Trade Button */}
-                <button className={`w-full px-4 py-4 mt-6 font-semibold rounded-lg transition-all duration-200 shadow-lg ${
-                  tradingMode === 'Buy' 
-                    ? 'bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white' 
+                <button className={`w-full px-4 py-4 mt-6 font-semibold rounded-lg transition-all duration-200 shadow-lg ${tradingMode === 'Buy'
+                    ? 'bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white'
                     : 'bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 text-white'
-                }`}>
+                  }`}>
                   {tradingMode} {selectedStock}
                 </button>
               </div>
             </div>
-            
+
             {/* Market News */}
             <div className="border shadow-lg bg-white/70 backdrop-blur-sm rounded-xl border-white/50">
               <div className="p-6">
@@ -587,7 +587,7 @@ export default function AMAnalytics() {
             </div>
           </div>
         </div>
-        
+
         {/* Performance Metrics */}
         <div className="grid grid-cols-1 gap-6 mt-8 md:grid-cols-2 lg:grid-cols-4">
           <div className="p-6 border shadow-lg bg-white/70 backdrop-blur-sm rounded-xl border-white/50">
@@ -604,7 +604,7 @@ export default function AMAnalytics() {
               <span className="text-green-600">+5.2%</span> from yesterday
             </div>
           </div>
-          
+
           <div className="p-6 border shadow-lg bg-white/70 backdrop-blur-sm rounded-xl border-white/50">
             <div className="flex items-center justify-between">
               <div>
@@ -619,7 +619,7 @@ export default function AMAnalytics() {
               <span className="text-blue-600">+2.1%</span> this month
             </div>
           </div>
-          
+
           <div className="p-6 border shadow-lg bg-white/70 backdrop-blur-sm rounded-xl border-white/50">
             <div className="flex items-center justify-between">
               <div>
@@ -634,7 +634,7 @@ export default function AMAnalytics() {
               <span className="text-purple-600">3 new</span> positions today
             </div>
           </div>
-          
+
           <div className="p-6 border shadow-lg bg-white/70 backdrop-blur-sm rounded-xl border-white/50">
             <div className="flex items-center justify-between">
               <div>

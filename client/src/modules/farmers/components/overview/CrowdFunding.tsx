@@ -74,7 +74,7 @@ const CrowdfundingProjects = () => {
               onClick={() => setIsRealData(true)}
               className="px-3 py-1 text-sm font-medium text-white bg-green-600 rounded hover:bg-green-700"
             >
-              Switch to Real Projects
+              Continue To View
             </button>
           </div>
         </div>

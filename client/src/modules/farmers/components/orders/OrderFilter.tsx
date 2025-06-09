@@ -5,6 +5,7 @@ import { Popover, PopoverContent, PopoverTrigger } from '@/shared/components/ui/
 
 import { CalendarIcon } from '@radix-ui/react-icons';
 import { format } from 'date-fns';
+import { useState } from 'react';
 
 interface SearchBarProps {
   onSearch: (term: string) => void;
@@ -53,7 +54,7 @@ export function FilterOptions({ onFilter }: FilterOptionsProps) {
           <SelectValue placeholder="Status" />
         </SelectTrigger>
         <SelectContent>
-          <SelectItem value="">All Statuses</SelectItem>
+          <SelectItem value="all">All Statuses</SelectItem>
           <SelectItem value="pending">Pending</SelectItem>
           <SelectItem value="processing">Processing</SelectItem>
           <SelectItem value="shipped">Shipped</SelectItem>
@@ -88,16 +89,16 @@ export function FilterOptions({ onFilter }: FilterOptionsProps) {
           </Button>
         </PopoverTrigger>
         <PopoverContent className="w-auto p-0">
-          <Calendar
+          {/* <Calendar
             mode="single"
             selected={endDate}
             onSelect={setEndDate}
             initialFocus
-          />
+          /> */}
         </PopoverContent>
       </Popover>
 
-      <Button onClick={handleFilter}>Apply Filters</Button>
+      <Button className='bg-green-500' onClick={handleFilter}>Apply Filters</Button>
       <Button variant="outline" onClick={handleReset}>
         Reset
       </Button>

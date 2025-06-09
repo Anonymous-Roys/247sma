@@ -586,7 +586,7 @@ const RelatedProducts = ({ products }: { products: Product[] }) => {
       <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4">
         {products.map((product) => (
           <CompactProductCard
-            key={product.id}
+            key={product._id}
             product={product}
           />
         ))}

@@ -2,7 +2,7 @@
 
 export interface User {
   _id: string;
-  fullname?: string;
+  lastname?: string;
   email?: string;
   phone?: string;
   password: string;

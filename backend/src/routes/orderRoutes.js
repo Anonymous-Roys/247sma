@@ -1,19 +1,18 @@
-// const express = require('express');
-// const router = express.Router();
-// const orderController = require('../controllers/orderController');
-// const { checkAuth, checkRole } = require('../middleware/auth');
-// const { orderValidation } = require('../validation/orderValidation');
+const express = require('express');
+const orderController = require('../controllers/orderController');
 
-// // Customer routes
-// router.post('/', checkAuth, orderValidation, orderController.createOrder);
-// router.get('/my-orders', checkAuth, orderController.getCustomerOrders);
-// router.get('/:id', checkAuth, orderController.getOrderDetails);
+const router = express.Router();
 
-// // Farmer routes
-// router.get('/farmer/my-orders', checkAuth, checkRole('farmer'), orderController.getFarmerOrders);
-// router.patch('/:id/status', checkAuth, checkRole('farmer'), orderController.updateOrderStatus);
+// Create a new order
+router.post('/', orderController.createOrder);
 
-// // Admin/Payment webhook routes
-// router.patch('/:id/payment', orderController.updatePaymentStatus);
+// Get user's orders (can use either userId or email)
+router.get('/user/:userId', orderController.getUserOrders);
+router.get('/user', orderController.getUserOrders); // For query param ?email=
+router.get('/farmer/:farmerId', orderController.getOrdersByFarmer);
 
-// module.exports = router;
+
+// Get order details
+router.get('/:orderId', orderController.getOrderDetails);
+
+module.exports = router;

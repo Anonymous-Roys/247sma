@@ -47,7 +47,7 @@ interface ProductVariant {
 }
 
 interface Product {
-  id: string | number;
+  _id: string | number;
   farmerId: string;
   name: string;
   slug: string;

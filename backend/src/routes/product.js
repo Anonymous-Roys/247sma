@@ -8,11 +8,47 @@ router.post('/', authMiddleware, async (req, res) => {
   res.status(201).json(product);
 });
 
-router.get('/:id', async (req, res) => {
-  const product = await productService.getProduct(req.params.id);
-  if (!product) return res.status(404).json({ error: 'Not found' });
-  res.json(product);
+// router.get('/:id', async (req, res) => {
+//   const product = await productService.getProduct(req.params.id);
+//   if (!product) return res.status(404).json({ error: 'Not found' });
+//   res.json(product);
+// });
+
+
+router.get('/:slug', async (req, res) => {
+  try {
+    const product = await productService.getProductBySlug(req.params.slug);
+    if (!product) return res.status(404).json({ error: 'Not found' });
+    res.json(product);
+  } catch (error) {
+    console.error('Error fetching product by slug:', error);
+    res.status(500).json({ error: 'Server error' });
+  }
 });
+
+// GET /api/products/related?slug=air-jordan-1&categories=sneakers,basketball
+router.get('/related', async (req, res) => {
+  const { slug, categories } = req.query;
+
+  if (!slug || !categories) {
+    return res.status(400).json({ error: 'Missing slug or categories' });
+  }
+
+  try {
+    const categoryArray = categories.split(',');
+    
+    const relatedProducts = await Product.find({
+      slug: { $ne: slug }, // Exclude current product
+      categories: { $in: categoryArray },
+    }).limit(4);
+
+    res.json(relatedProducts);
+  } catch (err) {
+    console.error('Error fetching related products:', err);
+    res.status(500).json({ error: 'Server error' });
+  }
+});
+
 
 router.route('/')
   .get(productService.getAllProducts);

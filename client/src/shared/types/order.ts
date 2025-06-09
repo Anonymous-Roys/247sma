@@ -46,7 +46,7 @@ export interface Discount {
 
 export interface Order {
   _id: string;
-  customerId: string | User;
+  customer: User | string;
   orderNumber: string;
   items: OrderItem[];
   subtotal: number;

@@ -115,6 +115,11 @@ exports.getAllProducts = async (req, res) => {
   }
 };
 
+
+exports.getProductBySlug = async (slug) => {
+  return Product.findOne({ slug });
+};
+
 // In your product controller file
 exports.getProductsByFarmer = async (farmerId) => {
   return Product.find({ farmerId });

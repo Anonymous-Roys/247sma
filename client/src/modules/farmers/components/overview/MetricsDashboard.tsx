@@ -43,7 +43,7 @@ const MetricsDashboard = () => {
               onClick={() => setIsRealData(true)}
               className="px-3 py-1 text-sm font-medium text-white bg-green-600 rounded hover:bg-green-700"
             >
-              Show Real Data
+              Continue To View
             </button>
           </div>
         </div>
@@ -155,7 +155,7 @@ const MetricsDashboard = () => {
           onClick={() => setIsRealData(!isRealData)}
           className={`px-2 py-1 text-xs rounded ${isRealData ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'}`}
         >
-          {isRealData ? 'Using Real Data' : 'Using Demo Data'}
+          {isRealData ? 'Simulating Real Data' : 'Using Demo Data'}
         </button>
       </div>
     </div>

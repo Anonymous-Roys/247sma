@@ -1,83 +1,64 @@
 const orderService = require('../services/orderService');
-const { validationResult } = require('express-validator');
 
-class OrderController {
-  // Create a new order
+module.exports = {
+  /**
+   * Create a new order (no validation)
+   */
   async createOrder(req, res) {
     try {
-      const errors = validationResult(req);
-      if (!errors.isEmpty()) {
-        return res.status(400).json({ errors: errors.array() });
-      }
-
-      const order = await orderService.createOrder({
-        ...req.body,
-        customerId: req.user._id
-      });
+      const order = await orderService.createOrder(req.body);
       res.status(201).json(order);
     } catch (error) {
-      res.status(400).json({ message: error.message });
+      res.status(500).json({ message: 'Failed to create order', error });
     }
-  }
+  },
 
-  // Get customer's orders
-  async getCustomerOrders(req, res) {
+  /**
+   * Get user's orders
+   */
+  async getUserOrders(req, res) {
     try {
-      const { page = 1, limit = 10 } = req.query;
-      const result = await orderService.getCustomerOrders(req.user._id, parseInt(page), parseInt(limit));
-      res.json(result);
+      // For demo, using email as user identifier
+      const userId = req.params.userId || req.query.email;
+      if (!userId) {
+        return res.status(400).json({ message: 'User identifier required' });
+      }
+      
+      const orders = await orderService.getOrdersByUser(userId);
+      res.json(orders);
     } catch (error) {
-      res.status(500).json({ message: error.message });
+      res.status(500).json({ message: 'Failed to get orders', error });
     }
-  }
+  },
 
-  // Get farmer's orders
-  async getFarmerOrders(req, res) {
-    try {
-      const { page = 1, limit = 10 } = req.query;
-      const result = await orderService.getFarmerOrders(req.user._id, parseInt(page), parseInt(limit));
-      res.json(result);
-    } catch (error) {
-      res.status(500).json({ message: error.message });
-    }
-  }
-
-  // Get order details
+  /**
+   * Get order details
+   */
   async getOrderDetails(req, res) {
     try {
-      const order = await orderService.getOrderById(req.params.id, req.user._id);
+      const order = await orderService.getOrderById(req.params.orderId);
+      if (!order) {
+        return res.status(404).json({ message: 'Order not found' });
+      }
       res.json(order);
     } catch (error) {
-      res.status(404).json({ message: error.message });
+      res.status(500).json({ message: 'Failed to get order details', error });
     }
-  }
-
-  // Update order status (for farmers)
-  async updateOrderStatus(req, res) {
-    try {
-      const order = await orderService.updateOrderStatus(
-        req.params.id,
-        req.user._id,
-        req.body.status
-      );
-      res.json(order);
-    } catch (error) {
-      res.status(400).json({ message: error.message });
+  },
+  /**
+ * Get orders by farmer ID
+ */
+async getOrdersByFarmer(req, res) {
+  try {
+    const farmerId = req.params.farmerId;
+    if (!farmerId) {
+      return res.status(400).json({ message: 'Farmer ID is required' });
     }
-  }
-
-  // Admin or payment webhook can update payment status
-  async updatePaymentStatus(req, res) {
-    try {
-      const order = await orderService.updatePaymentStatus(
-        req.params.id,
-        req.body
-      );
-      res.json(order);
-    } catch (error) {
-      res.status(400).json({ message: error.message });
-    }
+    
+    const orders = await orderService.getOrdersByFarmer(farmerId);
+    res.json(orders);
+  } catch (error) {
+    res.status(500).json({ message: 'Failed to get farmer orders', error });
   }
 }
-
-module.exports = new OrderController();
+};

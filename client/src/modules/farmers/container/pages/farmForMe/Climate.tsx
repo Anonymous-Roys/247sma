@@ -17,19 +17,19 @@ const advisoryPosts = [
   {
     date: 'April 20th, 2023',
     title: 'New Vegetables and Flowers',
-    image: '/vegetables.jpg',
+    image: '/maize.png',
     content: "We're excited to share that our farm is now offering a new selection of vegetables. They are all grown organically and taste amazing. We have also added a few new flowers to the mix. Come visit us this weekend at the farmers' market in town."
   },
   {
     date: 'April 15th, 2023',
     title: 'Fresh Strawberries',
-    image: '/strawberries.jpg',
+    image: '/pine.png',
     content: "We just harvested some delicious strawberries from our farm. They are sweet and juicy, perfect for making jam or eating on their own. Come visit us at the farmers' market this weekend to get your hands on these tasty treats!"
   },
   {
     date: 'April 15th, 2023',
     title: 'Fresh Strawberries',
-    image: '/strawberries.jpg',
+    image: '/banana.png',
     content: "We just harvested some delicious strawberries from our farm. They are sweet and juicy, perfect for making jam or eating on their own."
   }
 ];
@@ -59,9 +59,27 @@ interface WeatherIconProps {
 export default function ClimateDashboard() {
   const [tempUnit, setTempUnit] = useState('C');
   const [timeView, setTimeView] = useState('Today');
-
+const [isRealData, setIsRealData] = useState(false);
   return (
     <div className="min-h-screen bg-gray-50">
+       {!isRealData && (
+        <div className="absolute inset-0 flex items-center justify-center backdrop-blur-[1px] z-10">
+          <div className="flex items-center p-3 border border-gray-200 rounded-lg shadow-sm bg-white/90">
+            <span className="px-2 py-1 mr-2 text-xs text-yellow-800 bg-yellow-100 rounded">
+              DEMO
+            </span>
+            <p className="text-sm text-gray-700">
+              Showing sample data
+            </p>
+            <button 
+              onClick={() => setIsRealData(true)}
+              className="ml-3 text-sm font-medium text-blue-600 hover:text-blue-800"
+            >
+              Continue To View
+            </button>
+          </div>
+        </div>
+      )}
       <header className="bg-white shadow-sm">
         <div className="px-4 py-3 mx-auto max-w-7xl sm:px-6 lg:px-8">
           <div className="flex items-center">
@@ -120,8 +138,8 @@ export default function ClimateDashboard() {
               </div>
               
               {/* Temperature Unit Toggle */}
-              <div className="flex justify-end md:col-span-1">
-                <div className="inline-flex p-1 bg-gray-100 rounded-full">
+              <div className="justify-end w-fit">
+                <div className=" p-1 bg-gray-100 rounded-full w-fit">
                   <button
                     className={`px-3 py-1 rounded-full ${
                       tempUnit === 'F' ? 'bg-white shadow-sm' : 'text-gray-500'
@@ -212,7 +230,7 @@ export default function ClimateDashboard() {
                     <div className="flex p-4">
                       <div className="flex-shrink-0 w-24 h-24 overflow-hidden bg-gray-200 rounded-md">
                         <img 
-                          src={index === 0 ? "/api/placeholder/120/120" : "/api/placeholder/120/120"} 
+                          src={post.image} 
                           alt={post.title}
                           className="object-cover w-full h-full"
                         />

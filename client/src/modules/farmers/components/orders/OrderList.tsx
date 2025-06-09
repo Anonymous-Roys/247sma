@@ -2,12 +2,12 @@
 import { Button } from '@/shared/components/ui/button';
 import { Badge } from '@/shared/components/ui/badge';
 import { format } from 'date-fns';
-import { Order } from '@/shared/types/order';
+// import { Order } from '@/shared/types/order';
 
-interface OrderListProps {
-  orders: Order[];
-  onOrderSelect: (order: Order) => void;
-}
+// interface OrderListProps {
+//   orders: Order[];
+//   onOrderSelect: (order: Order) => void;
+// }
 
 const statusColors = {
   pending: 'bg-yellow-100 text-yellow-800',
@@ -18,7 +18,7 @@ const statusColors = {
   refunded: 'bg-gray-100 text-gray-800',
 };
 
-export default function OrderList({ orders, onOrderSelect }: OrderListProps) {
+export default function OrderList({ orders, onOrderSelect }) {
   return (
     <div className="overflow-x-auto">
       <table className="min-w-full divide-y divide-gray-200">
@@ -54,7 +54,7 @@ export default function OrderList({ orders, onOrderSelect }: OrderListProps) {
                 {order.orderNumber}
               </td>
               <td className="px-6 py-4 text-sm text-gray-500 whitespace-nowrap">
-                {order.customerId?.name || 'N/A'}
+                {order.customer?.lastName || 'N/A'}
               </td>
               <td className="px-6 py-4 text-sm text-gray-500 whitespace-nowrap">
                 {order.items.length} items

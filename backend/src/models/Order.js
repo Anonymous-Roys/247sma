@@ -1,9 +1,9 @@
 const mongoose = require('mongoose');
 
 const OrderItemSchema = new mongoose.Schema({
-  productId: { type: mongoose.Schema.Types.ObjectId, ref: 'Product', required: true },
+  productId: { type: String},
   productName: { type: String, required: true },
-  variantId: { type: String, required: true },
+  variantId: { type: String},
   variantName: { type: String, required: true },
   quantity: { type: Number, required: true },
   price: { type: Number, required: true },
@@ -14,14 +14,22 @@ const OrderItemSchema = new mongoose.Schema({
     enum: ['kg', 'g', 'lb', 'oz'],
     required: true
   },
-  farmerId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true }
+  farmerId: { type:  String }
+}, { _id: false });
+
+const CustomerInfoSchema = new mongoose.Schema({
+  firstName: { type: String, required: true },
+  lastName: { type: String, required: true },
+  email: { type: String, required: true },
+  phone: { type: String },
+  isGuest: { type: Boolean, default: true }
 }, { _id: false });
 
 const ShippingInfoSchema = new mongoose.Schema({
   address: {
     street: { type: String, required: true },
     city: { type: String, required: true },
-    state: { type: String, required: true },
+    state: { type: String },
     country: { type: String, required: true },
     postalCode: { type: String, required: true }
   },
@@ -45,7 +53,8 @@ const PaymentInfoSchema = new mongoose.Schema({
 }, { _id: false });
 
 const OrderSchema = new mongoose.Schema({
-  customerId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
+  customer: { type: CustomerInfoSchema, required: true },
+  userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: false }, // Optional for logged-in users
   orderNumber: { type: String, required: true, unique: true },
   items: { type: [OrderItemSchema], required: true },
   subtotal: { type: Number, required: true },

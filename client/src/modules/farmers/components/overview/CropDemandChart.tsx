@@ -42,7 +42,7 @@ const CropDemandChart = () => {
               onClick={() => setIsRealData(true)}
               className="ml-3 text-sm font-medium text-blue-600 hover:text-blue-800"
             >
-              Switch to real data
+              Continue To View
             </button>
           </div>
         </div>
@@ -56,7 +56,7 @@ const CropDemandChart = () => {
             onClick={() => setIsRealData(!isRealData)}
             className={`text-xs px-2 py-1 rounded ${isRealData ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'}`}
           >
-            {isRealData ? 'Using Real Data' : 'Using Demo Data'}
+            {isRealData ? 'Simulating Real Data' : 'Using Demo Data'}
           </button>
           {/* <button aria-label="View more options" className="p-1 rounded-full hover:bg-gray-100">
             <MoreVertical className="w-5 h-5 text-gray-500" />

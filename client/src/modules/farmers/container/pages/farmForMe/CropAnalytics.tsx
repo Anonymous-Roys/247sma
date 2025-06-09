@@ -23,17 +23,17 @@ const recommendations = [
   {
     title: 'How to grow your yam fields with the current moisture levels of your soil',
     category: 'Crop Growth',
-    description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation...'
+    description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation'
   },
   {
     title: 'Pest control methods for your maize crop',
     category: 'Pest Management',
-    description: 'Effective management of stem borers and fall armyworms can increase your yield by up to 30%. Consider integrated pest management approaches...'
+    description: 'Effective management of stem borers and fall armyworms can increase your yield by up to 30%. Consider integrated pest management approaches'
   },
   {
     title: 'Soil nutrient management for optimal growth',
     category: 'Soil Health',
-    description: 'Your soil analysis indicates low nitrogen levels. Consider applying nitrogen-rich fertilizers to improve crop yield and health...'
+    description: 'Your soil analysis indicates low nitrogen levels. Consider applying nitrogen-rich fertilizers to improve crop yield and health'
   }
 ];
 
@@ -41,9 +41,28 @@ export default function CropAnalytics() {
   const [selectedTimeframe, setSelectedTimeframe] = useState('Day');
   const [selectedCrop, setSelectedCrop] = useState('maize');
   const [expandedRec, setExpandedRec] = useState(0);
+const [isRealData, setIsRealData] = useState(false);
 
   return (
     <div className="min-h-screen bg-gray-50">
+       {!isRealData && (
+        <div className="absolute inset-0 flex items-center justify-center backdrop-blur-[1px] z-10">
+          <div className="flex items-center p-3 border border-gray-200 rounded-lg shadow-sm bg-white/90">
+            <span className="px-2 py-1 mr-2 text-xs text-yellow-800 bg-yellow-100 rounded">
+              DEMO
+            </span>
+            <p className="text-sm text-gray-700">
+              Showing sample data
+            </p>
+            <button 
+              onClick={() => setIsRealData(true)}
+              className="ml-3 text-sm font-medium text-blue-600 hover:text-blue-800"
+            >
+              Continue To View
+            </button>
+          </div>
+        </div>
+      )}
       <header className="bg-white shadow-sm">
         <div className="flex items-center justify-between px-4 py-3 mx-auto max-w-7xl sm:px-6 lg:px-8">
           <div className="flex items-center">
@@ -51,10 +70,10 @@ export default function CropAnalytics() {
             <ChevronRight className="w-4 h-4 mx-1 text-gray-400" />
             <h2 className="text-lg font-medium text-gray-700">Crop Analytics</h2>
           </div>
-          <button className="flex items-center px-3 py-1 text-green-700 hover:text-green-800">
+          {/* <button className="flex items-center px-3 py-1 text-green-700 hover:text-green-800">
             <span>Export Data</span>
             <Download className="w-5 h-5 ml-1" />
-          </button>
+          </button> */}
         </div>
       </header>
 
@@ -71,7 +90,7 @@ export default function CropAnalytics() {
               
               <div className="overflow-hidden bg-gray-100 aspect-w-16 aspect-h-9">
                 <img 
-                  src="/api/placeholder/800/400" 
+                  src="/maize.png" 
                   alt="Corn cob in field" 
                   className="object-cover w-full"
                 />
@@ -80,7 +99,7 @@ export default function CropAnalytics() {
               <div className="p-4">
                 <h3 className="text-lg font-medium text-gray-800">Crop Growth Data Over the Past</h3>
                 <div className="flex mt-2 mb-4 space-x-2">
-                  {['Day', 'Week', 'Month'].map((timeframe) => (
+                  {['Day'].map((timeframe) => (
                     <button 
                       key={timeframe}
                       onClick={() => setSelectedTimeframe(timeframe)}
@@ -170,8 +189,8 @@ export default function CropAnalytics() {
                       className="px-3 py-1 pr-8 text-sm bg-white border border-gray-300 rounded-md appearance-none focus:outline-none focus:ring-2 focus:ring-green-500"
                     >
                       <option value="maize">maize</option>
-                      <option value="yam">yam</option>
-                      <option value="cassava">cassava</option>
+                      {/* <option value="yam">yam</option>
+                      <option value="cassava">cassava</option> */}
                     </select>
                     <ChevronDown className="absolute w-4 h-4 text-gray-500 transform -translate-y-1/2 right-2 top-1/2" />
                   </div>
@@ -202,13 +221,13 @@ export default function CropAnalytics() {
                     </div>
                   ))}
                 </div>
-                
+{/*                 
                 <div className="mt-6 text-center">
                   <button className="inline-flex items-center text-sm text-gray-500 hover:text-gray-700">
                     <span>SEE MORE RECOMMENDATIONS</span>
                     <ChevronRight className="w-4 h-4 ml-1" />
                   </button>
-                </div>
+                </div> */}
               </div>
             </div>
           </div>

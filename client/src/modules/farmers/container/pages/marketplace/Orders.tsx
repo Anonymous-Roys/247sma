@@ -19,13 +19,19 @@ const Orders = () => {
   useEffect(() => {
     const fetchOrders = async () => {
       try {
+
+         
         const token = sessionStorage.getItem('token');
-        const response = await axios.get(`${BASE_URL}/api/orders`, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
+         const res = await fetch(`${BASE_URL}/api/me`, {
+          headers: { Authorization: `Bearer ${token}` },
         });
+
+        if (!res.ok) throw new Error("Failed to fetch user");
+
+        const data = await res.json();
+        const response = await axios.get(`${BASE_URL}/api/orders/farmer/${data.user._id}`);
         setOrders(response.data);
+        console.log(response.data[0].customer.firstName);
         setFilteredOrders(response.data);
         setIsLoading(false);
       } catch (err) {
