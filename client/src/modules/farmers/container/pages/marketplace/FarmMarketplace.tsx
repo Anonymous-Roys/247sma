@@ -47,7 +47,8 @@ interface ProductVariant {
 }
 
 interface Product {
-  _id: string | number;
+  id?: string | number; // Allow both string and number for _id
+  _id?: string | number;
   farmerId: string;
   name: string;
   slug: string;
@@ -74,7 +75,7 @@ interface Product {
 // Sample product data matching the interface
 export const products: Product[] = [
   {
-    id: "1",
+    _id: "1",
     farmerId: "farmer-1",
     name: 'Cassava',
     slug: 'cassava',
@@ -279,7 +280,7 @@ export default function FarmMarketplace() {
           <>
             <div className="grid grid-cols-2 gap-3 mb-6 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-4">
               {data.data.map((product: Product) => (
-                <CompactProductCard key={product.id} product={product} />
+                <CompactProductCard key={product._id} product={product} />
               ))}
             </div>
 
@@ -354,8 +355,8 @@ function StatCard({ title, value, trend }: { title: string; value: string; trend
 }
 
 // Product Card Component
-export function CompactProductCard({ product }: { product: Product }) {
-  const primaryImage = product.images.find(img => img.isPrimary) || product.images[0];
+export function CompactProductCard({ product }: { product: any}) {
+  const primaryImage = product.images.find((img: ProductImage) => img.isPrimary) || product.images[0];
   const price = product.variants[0].price;
 
   return (
@@ -410,7 +411,7 @@ function SidebarComponent({
   handlePriceRangeChange,
 }: {
   selectedCategory: ProductCategory | null;
-  handleCategoryChange: (category: ProductCategory) => void;
+  handleCategoryChange: (category: ProductCategory | null) => void;
   priceRange: number;
   handlePriceRangeChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }) {

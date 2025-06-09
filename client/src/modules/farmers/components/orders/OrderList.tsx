@@ -1,13 +1,14 @@
+/* eslint-disable react/prop-types */
 
 import { Button } from '@/shared/components/ui/button';
 import { Badge } from '@/shared/components/ui/badge';
 import { format } from 'date-fns';
-// import { Order } from '@/shared/types/order';
+import { Order } from '@/shared/types/order';
 
-// interface OrderListProps {
-//   orders: Order[];
-//   onOrderSelect: (order: Order) => void;
-// }
+interface OrderListProps {
+  orders: Order[];
+  onOrderSelect: (order: Order) => void;
+}
 
 const statusColors = {
   pending: 'bg-yellow-100 text-yellow-800',
@@ -18,7 +19,7 @@ const statusColors = {
   refunded: 'bg-gray-100 text-gray-800',
 };
 
-export default function OrderList({ orders, onOrderSelect }) {
+export default function OrderList({ orders, onOrderSelect }: OrderListProps) {
   return (
     <div className="overflow-x-auto">
       <table className="min-w-full divide-y divide-gray-200">
@@ -48,13 +49,17 @@ export default function OrderList({ orders, onOrderSelect }) {
           </tr>
         </thead>
         <tbody className="bg-white divide-y divide-gray-200">
-          {orders.map((order) => (
+          {orders.map((order: Order) => (
             <tr key={order._id} className="hover:bg-gray-50">
               <td className="px-6 py-4 text-sm font-medium text-gray-900 whitespace-nowrap">
                 {order.orderNumber}
               </td>
               <td className="px-6 py-4 text-sm text-gray-500 whitespace-nowrap">
-                {order.customer?.lastName || 'N/A'}
+                {typeof order.customer === 'object' && order.customer !== null
+                  ? order.customer.lastName
+                  : typeof order.customer === 'string'
+                  ? order.customer
+                  : 'N/A'}
               </td>
               <td className="px-6 py-4 text-sm text-gray-500 whitespace-nowrap">
                 {order.items.length} items
@@ -63,7 +68,7 @@ export default function OrderList({ orders, onOrderSelect }) {
                 ₵{order.total.toFixed(2)}
               </td>
               <td className="px-6 py-4 whitespace-nowrap">
-                <Badge className={`${statusColors[order.status]} text-xs`}>
+                <Badge className={`${statusColors[order.status as keyof typeof statusColors]} text-xs`}>
                   {order.status.charAt(0).toUpperCase() + order.status.slice(1)}
                 </Badge>
               </td>

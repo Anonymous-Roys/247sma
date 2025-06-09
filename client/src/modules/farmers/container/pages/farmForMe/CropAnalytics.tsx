@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { ChevronRight, BookOpen, ChevronDown, Download } from 'lucide-react';
+import { ChevronRight, BookOpen, ChevronDown } from 'lucide-react';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 
 const cropGrowthData = [

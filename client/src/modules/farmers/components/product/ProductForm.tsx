@@ -1,5 +1,5 @@
-import { useState, useRef, ChangeEvent } from "react";
-import { FiUpload, FiX, FiCheck, FiInfo } from "react-icons/fi";
+import { useState, useRef} from "react";
+import { FiUpload, FiX, FiInfo } from "react-icons/fi";
 
 type ProductFormProps = {
   onSubmit: (product: any) => void;

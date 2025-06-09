@@ -90,9 +90,21 @@ export default function OrderDetailsModal({ order, onClose, onAction }: OrderDet
               <div className="p-4 rounded-lg bg-gray-50">
                 <h3 className="mb-3 text-lg font-medium">Customer Information</h3>
                 <div className="space-y-2">
-                  <p className="font-medium">{order.customer?.lastName || 'N/A'}</p>
-                  <p className="text-sm text-gray-600">{order.customer?.email || 'N/A'}</p>
-                  <p className="text-sm text-gray-600">{order.customer?.phone || 'N/A'}</p>
+                  <p className="font-medium">
+                    {typeof order.customer === 'object' && order.customer !== null
+                      ? order.customer.lastName
+                      : 'N/A'}
+                  </p>
+                  <p className="text-sm text-gray-600">
+                    {typeof order.customer === 'object' && order.customer !== null
+                      ? order.customer.email
+                      : 'N/A'}
+                  </p>
+                  <p className="text-sm text-gray-600">
+                    {typeof order.customer === 'object' && order.customer !== null
+                      ? order.customer.phone
+                      : 'N/A'}
+                  </p>
                 </div>
               </div>
             </div>

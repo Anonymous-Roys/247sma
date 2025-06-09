@@ -1,6 +1,6 @@
 'use client'
 import {useEffect, useState } from 'react';
-import { ChevronDown, ChevronUp, ArrowLeft, Star, Heart, Facebook, Twitter, Share2, HomeIcon } from 'lucide-react';
+import { ChevronDown, ChevronUp, ArrowLeft, Star, Facebook, Twitter, Share2, HomeIcon } from 'lucide-react';
 import { Product, ProductImage } from '@/shared/types/product';
 import { Link } from 'react-router-dom';
 import { CompactProductCard } from './FarmMarketplace';
@@ -54,7 +54,7 @@ const Breadcrumb = ({ product }: { product: Product }) => {
           <span className="text-gray-300">/</span>
           
           {/* Category - Non-clickable */}
-          <span className="text-gray-200 capitalize">{product.categories[0]}</span>
+          <span className="text-gray-200 capitalize">{product.categories?.[0]}</span>
           
           <span className="text-gray-300">/</span>
           
@@ -208,7 +208,7 @@ const ProductInfo = ({
                     <Star
                       key={i}
                       size={16}
-                      className={i < Math.floor(product.averageRating) ? "fill-current" : ""}
+                      className={i < Math.floor(product.averageRating ?? 0) ? "fill-current" : ""}
                     />
                   ))}
                 </div>
@@ -287,7 +287,7 @@ const ProductInfo = ({
             <div>
               <span className="text-gray-500">Category:</span>
               <div className="mt-1">
-                {product.categories.map((category) => (
+                {product.categories?.map((category) => (
                   <button
                     key={category}
                     className="mr-2 text-green-600 capitalize hover:text-green-700"
@@ -442,7 +442,7 @@ const ProductTabs = ({ product }: { product: Product }) => {
                 <div>
                   <span className="font-medium text-gray-900">Harvest Date:</span>
                   <span className="ml-2 text-gray-700">
-                    {product.harvestDate}
+                    {product.harvestDate.toLocaleDateString()}
                   </span>
                 </div>
               )}
@@ -464,7 +464,7 @@ const ProductTabs = ({ product }: { product: Product }) => {
               <div>
                 <span className="font-medium text-gray-900">Categories:</span>
                 <span className="ml-2 text-gray-700 capitalize">
-                  {product.categories.join(', ')}
+                  {product.categories?.join(', ')}
                 </span>
               </div>
             </div>
@@ -587,7 +587,17 @@ const RelatedProducts = ({ products }: { products: Product[] }) => {
         {products.map((product) => (
           <CompactProductCard
             key={product._id}
-            product={product}
+         product={{
+  ...product,
+  farmerId:
+    typeof product.farmerId === 'string'
+      ? product.farmerId
+      : product.farmerId?._id ?? '',
+  shortDescription: product.shortDescription ?? '',
+  categories: product.categories ?? [] // ✅ Fallback ensures defined
+}}
+
+
           />
         ))}
       </div>

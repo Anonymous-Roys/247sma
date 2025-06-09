@@ -6,15 +6,18 @@ import { BASE_URL } from '@/shared/lib/utils';
 import { FilterOptions, Pagination, SearchBar } from '@/modules/farmers/components/orders/OrderFilter';
 import OrderList from '@/modules/farmers/components/orders/OrderList';
 import OrderDetailsModal from '@/modules/farmers/components/orders/OrderDetailsModel';
+import { Order } from '@/shared/types/order';
+
+
 
 const Orders = () => {
-  const [orders, setOrders] = useState([]);
-  const [filteredOrders, setFilteredOrders] = useState([]);
-  const [selectedOrder, setSelectedOrder] = useState(null);
+  const [orders, setOrders] = useState<Order[]>([]);
+  const [filteredOrders, setFilteredOrders] = useState<Order[]>([]);
+  const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     const fetchOrders = async () => {
@@ -35,7 +38,11 @@ const Orders = () => {
         setFilteredOrders(response.data);
         setIsLoading(false);
       } catch (err) {
-        setError(err.response?.data?.message || 'Failed to fetch orders');
+        if (typeof err === 'object' && err !== null && 'response' in err) {
+          setError((err as any).response?.data?.message || 'Failed to fetch orders');
+        } else {
+          setError('Failed to fetch orders');
+        }
         setIsLoading(false);
       }
     };
@@ -47,11 +54,15 @@ const Orders = () => {
     setTotalPages(Math.ceil(filteredOrders.length / 5));
   }, [filteredOrders]);
 
-  const handleOrderSelect = (order) => {
+  const handleOrderSelect = (order: any) => {
     setSelectedOrder(order);
   };
 
-  const handleOrderAction = async (action) => {
+  const handleOrderAction = async (action: string) => {
+    if (!selectedOrder) {
+      setError('No order selected');
+      return;
+    }
     try {
       const token = sessionStorage.getItem('token');
       let newStatus = '';
@@ -92,23 +103,27 @@ const Orders = () => {
       setFilteredOrders(updatedOrders);
       setSelectedOrder(response.data);
     } catch (err) {
-      setError(err.response?.data?.message || 'Failed to update order');
+      if (typeof err === 'object' && err !== null && 'response' in err) {
+        setError((err as any).response?.data?.message || 'Failed to update order');
+      } else {
+        setError('Failed to update order');
+      }
     }
   };
 
-  const handleSearch = (searchTerm) => {
+  const handleSearch = (searchTerm: string) => {
     const lowercasedTerm = searchTerm.toLowerCase();
     const searchedOrders = orders.filter(order => 
       order.orderNumber.toLowerCase().includes(lowercasedTerm) || 
-      (typeof order.customerId === 'object' && 
-        (order.customerId.name.toLowerCase().includes(lowercasedTerm) || 
-         order.customerId.email.toLowerCase().includes(lowercasedTerm)))
+      (typeof order.customer === 'object' && 
+        (order.customer?.lastName?.toLowerCase().includes(lowercasedTerm) || 
+         order.customer?.email?.toLowerCase().includes(lowercasedTerm)))
     );
     setFilteredOrders(searchedOrders);
     setCurrentPage(1);
   };
 
-  const handleFilter = (filters) => {
+  const handleFilter = (filters: { status?: string; startDate?: string; endDate?: string }) => {
     const { status, startDate, endDate } = filters;
 
     const filtered = orders.filter(order => {
@@ -124,7 +139,7 @@ const Orders = () => {
     setCurrentPage(1);
   };
 
-  const handlePageChange = (page) => {
+  const handlePageChange = (page: number) => {
     setCurrentPage(page);
   };
 
@@ -172,7 +187,7 @@ const Orders = () => {
 
       {selectedOrder && (
         <OrderDetailsModal 
-          order={selectedOrder} 
+          order={selectedOrder as Order} 
           onClose={() => setSelectedOrder(null)} 
           onAction={handleOrderAction} 
         />

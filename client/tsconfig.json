@@ -10,7 +10,7 @@
     "outDir": "./dist",
     "rootDir": "./src",
     "strict": false,
-    "esModuleInterop": true,
+    "esModuleInterop": false,
     "skipLibCheck": true,
     "noImplicitAny": false,
     "baseUrl": ".",
