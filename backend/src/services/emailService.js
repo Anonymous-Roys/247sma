@@ -6,6 +6,9 @@ const transporter = nodemailer.createTransport({
     user: process.env.EMAIL_USER,
     pass: process.env.EMAIL_PASS,
   },
+  tls: {
+    rejectUnauthorized: false // 👈 disables cert verification
+  }
 });
 
 exports.sendProductNotification = async (recipient, action, product) => {
@@ -90,3 +93,40 @@ exports.sendProductNotification = async (recipient, action, product) => {
     html: htmlMessage,
   });
 };
+
+const sendEmail = async (options) => {
+  const mailOptions = {
+    from: 'Buyer Auth <no-reply@buyerauth.com>',
+    to: options.email,
+    subject: options.subject,
+    text: options.message
+  };
+
+  await transporter.sendMail(mailOptions);
+};
+
+const sendVerificationEmail = async (user, token) => {
+  const verificationUrl = `${process.env.BASE_URL}/api/buyer/verify-email/${token}`;
+  
+  const message = `Please verify your email by clicking on this link: \n\n ${verificationUrl} \n\nThis link will expire in 24 hours.`;
+  
+  await sendEmail({
+    email: user.email,
+    subject: 'Email Verification',
+    message
+  });
+};
+
+const sendPasswordResetEmail = async (user, token) => {
+  const resetUrl = `${process.env.BASE_URL}/api/buyer/reset-password/${token}`;
+  
+  const message = `You requested a password reset. Click this link to set a new password: \n\n ${resetUrl} \n\nThis link will expire in 10 minutes.`;
+  
+  await sendEmail({
+    email: user.email,
+    subject: 'Password Reset',
+    message
+  });
+};
+
+module.exports = { sendVerificationEmail, sendPasswordResetEmail };
