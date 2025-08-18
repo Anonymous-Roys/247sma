@@ -10,10 +10,28 @@ const buyerSchema = new mongoose.Schema({
     lowercase: true,
     validate: [validator.isEmail, 'Please provide a valid email']
   },
-   profileImage: {
+  name: String, // Made optional to match interface
+  role: {
+    type: String,
+    enum: ["customer", "farmer", "investor", "transit"],
+    default: "customer"
+  },
+  kycStatus: {
+    type: String,
+    enum: ["not_started", "pending", "approved", "rejected"],
+    default: "not_started"
+  },
+  phone: String,
+  points: {
+    type: Number,
+    default: 0
+  },
+  profileImage: {
     data: Buffer,
     contentType: String
   },
+  avatar: String, // Added to match interface
+  address: String, // Added to match interface
   password: {
     type: String,
     required: [true, 'Please provide a password'],
@@ -47,45 +65,35 @@ const buyerSchema = new mongoose.Schema({
   timestamps: true
 });
 
-// Hash password before saving
+// Keep all your existing middleware and methods
 buyerSchema.pre('save', async function(next) {
   if (!this.isModified('password')) return next();
-  
   this.password = await bcrypt.hash(this.password, 12);
   this.passwordConfirm = undefined;
   next();
 });
 
-// Method to compare passwords
 buyerSchema.methods.correctPassword = async function(candidatePassword, userPassword) {
   return await bcrypt.compare(candidatePassword, userPassword);
 };
 
-// Generate verification token
 buyerSchema.methods.createVerificationToken = function() {
   const verificationToken = require('crypto').randomBytes(32).toString('hex');
-  
   this.verificationToken = require('crypto')
     .createHash('sha256')
     .update(verificationToken)
     .digest('hex');
-  
-  this.verificationTokenExpires = Date.now() + 24 * 60 * 60 * 1000; // 24 hours
-  
+  this.verificationTokenExpires = Date.now() + 24 * 60 * 60 * 1000;
   return verificationToken;
 };
 
-// Generate password reset token
 buyerSchema.methods.createPasswordResetToken = function() {
   const resetToken = require('crypto').randomBytes(32).toString('hex');
-  
   this.passwordResetToken = require('crypto')
     .createHash('sha256')
     .update(resetToken)
     .digest('hex');
-  
-  this.passwordResetExpires = Date.now() + 10 * 60 * 1000; // 10 minutes
-  
+  this.passwordResetExpires = Date.now() + 10 * 60 * 1000;
   return resetToken;
 };
 
